@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "## ui.R ##\nlibrary(shinydashboard)\nlibrary(shiny)  \n\nsidebar <- dashboardSidebar(\n  sidebarMenu(\n    menuItem(\"Dashboard\", tabName = \"dashboard\", icon = icon(\"dashboard\")),\n    menuItem(\"Basic\", icon = icon(\"th\"), tabName = \"basic\" ),\n    menuItem(\"Time Series\", icon = icon(\"th\"), tabName = \"timeseries\"),\n    menuItem(\"Scientific Plot\", icon = icon(\"th\"), tabName = \"scientific\")\n    \n  )\n)\n\n\nbody <- dashboardBody(\n  tabItems(\n    tabItem(tabName = \"dashboard\",\n            fluidRow(\n              box(plotOutput(\"plot1\", height = 250)),\n              box(plotOutput(\"plot2\", height = 250))\n            ),\n            fluidRow(\n              box(plotOutput(\"plot3\", height = 250)),\n              box(plotOutput(\"plot4\", height = 250))\n            )\n            \n            \n    )\n  )\n)\n\n# Put them together into a dashboardPage\ndashboardPage(\n  dashboardHeader(title = \"Visualization\"),\n  sidebar,\n  body\n)",
+    "created" : 1522301984861.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2798815143",
+    "id" : "41334C53",
+    "lastKnownWriteTime" : 1522315628,
+    "last_content_update" : 1522315628714,
+    "path" : "~/fiverr/Rshiny/ui.R",
+    "project_path" : "ui.R",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 3,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

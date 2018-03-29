@@ -1,0 +1,26 @@
+"Date_Time"  - Date and time 
+"Date"       -Date
+"Time"       -Time
+"CHANNEL" - channel 1,2,3,4 (riding lane)   
+"SP1"        "SP2"        "SP3"       "SP4"        "SP5"        "SP6"        "SP7"        "SP8"        "SP9"        "SP10"      
+"SP11"       "SP12"       "SP13"       "SP14"  speed bins(0 50 60 70 80 90 100 110 120 130 140 150 160 180 999)km/h 
+						count cars in 15 min in riding line.     
+"LN1"        "LN2"        "LN3"       "LN4"        "LN5"        
+"LN6"        "LN7"        "LN8"        "LN9"   length bins(0 300 470 550 600 1300 1800 2550 3600 9999)    
+ "CS1"       "CS2"        "CS3"        "CS4"        "CS5"        "CS6"  weigth bis      
+"INSTRUMENT" type of instrument which was measured
+"FILENAME"  Filename
+"SITE"      Place where is sensor 
+"LOCATION"   location where is sensor on map
+"HEADINGS"   direction (PP PP LM LM) PP or LM or whatever is direction of the city. 
+	     1Channel is PP second chanbel is PP third is LM and fourt is LM
+"STARTREC"    time of start recording
+"STOPREC"    time of stop recording
+"BATTERY"    name of battery
+"SENSORS"   
+"UNITS"      units(metrics)
+"INTERVAL"   interval 15 mis
+"PEAKINT"    
+"SPDBINS"    speed bins
+"LENBINS"    length bins
+"SUM" 	      sum of cars in 15 minutes in riding line

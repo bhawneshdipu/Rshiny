@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "source(\"global.R\")\nlibrary(tidyquant)\nserver <- function(input, output) {\n\n  output$plot1 <- renderPlot({\n    x <- ggplot(data1,aes(x = Date, y = SUM,col = CHANNEL))+\n      geom_bar(stat = \"identity\",size = 3,alpha = 0.5,fill = \"blue\")\n    #ggplotly(x)\n    (x)\n  })\n  output$plot2 <- renderPlot({\n    #pie plot by day of week\n    plot_ly(pac, labels = ~wday.lbl, values = ~SP10, type = 'pie',textposition = 'inside') %>%\n      layout(title = 'Kol??ov? graf')\n    \n  })\n  output$plot3 <- renderPlot({\n    x <- ggplot(data1,aes(x = Date, y = data1$SUM,col = CHANNEL))+\n      geom_bar(stat = \"identity\",size = 3,alpha = 0.5,fill = \"blue\")\n    #ggplotly(x)\n    (x)\n  })\n  output$plot4 <- renderPlot({\n    plot_ly(data1,x = ~CHANNEL,y = ~SP11, color = ~wday.lbl,type = \"box\")%>%\n      layout(boxmode = \"group\")\n    \n  })\n  \n}\n",
+    "created" : 1522302047434.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2073098136",
+    "id" : "7442362F",
+    "lastKnownWriteTime" : 1522317829,
+    "last_content_update" : 1522317829772,
+    "path" : "~/fiverr/Rshiny/server.R",
+    "project_path" : "server.R",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 4,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
