@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "@media screen and (max-width: 768px) {\n    .nav-text{\n      display:none;\n    }\n}\n",
+    "created" : 1522597691021.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "705654769",
+    "id" : "592C1A2E",
+    "lastKnownWriteTime" : 1522603400,
+    "last_content_update" : 1522603400865,
+    "path" : "~/fiverr/Rshiny/www/style.css",
+    "project_path" : "www/style.css",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 9,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "css"
+}

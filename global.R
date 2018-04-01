@@ -20,7 +20,7 @@ library(TSMining)
 #install.packages("devtools")
 
 devtools::install_github("twitter/AnomalyDetection")
-library(anomalyDetection)
+library(AnomalyDetection)
 packageVersion('plotly')
 #devtools::install_github("tidyverse/ggplot2")
 #devtools::install_github('hadley/ggplot2')

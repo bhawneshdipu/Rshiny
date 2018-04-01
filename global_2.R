@@ -136,13 +136,13 @@ plot_ly(SUM_DATA, x = ~Index, y = ~SUM)%>%
   add_trace(colors = "orange",name = "Početnosť áut v čase",mode = "lines")%>%
   add_trace(y = ~pred, colors = "gray",name = "Predikované hodnoty", mode = "lines+markers", alpha = 1,data = error_tbl)%>%
   layout(title = "Graf",
-    xaxis = list(title = "Čas",
-      rangeslider = list(type = "date")),
-    yaxis = list(title = "Početnosť áut"))
-  
-  
-  
-  
+         xaxis = list(title = "Čas",
+                      rangeslider = list(type = "date")),
+         yaxis = list(title = "Početnosť áut"))
+
+
+
+
 
 
 #====================================timetk + linear regression: MAPE = 4.3% (timetk demo)==================================
@@ -175,6 +175,7 @@ beer_sales_idx <- SUM_DATA %>%
 
 tail(beer_sales_idx)
 
+Sys.setenv(TZ = "America/Toronto")
 # Make future index
 future_idx <- beer_sales_idx %>%
   tk_make_future_timeseries(n_future =10)

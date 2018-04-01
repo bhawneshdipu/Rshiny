@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "$(document).ready(function(){\n  $('body > div > header > nav > div > ul').attr(\"class\",\"sidebar-menu nav navbar-nav mynavbar\");\n  $('body > div > header > nav > div > ul > li').removeClass(\"dropdown\").addClass(\"navbar-li\");\n\n  $('#sidebarItemExpanded > ul > li:not(.active)').css(\"display\",'none');\n  $('#sidebarItemExpanded > ul > li.active').css(\"display\",'');\n  \n});\n$(document).on(\"click\",function(){\n  $('#sidebarItemExpanded > ul > li:not(.active)').css(\"display\",'none');\n  $('#sidebarItemExpanded > ul > li.active').css(\"display\",'');\n  \n});\n$(document).on(\"click\",'.mynavbar-toggle',function(){\n  console.log(\"clicked on mynavbar-toggle\");\n  $('.mynavbar').toggle();\n});\n\n\n$(document).on(\"click\",'.sidebar-toggle',function(){\n  $('.mynavbar').show();\n});\n",
+    "created" : 1522590836401.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1156878937",
+    "id" : "DE7A84A3",
+    "lastKnownWriteTime" : 1522603444,
+    "last_content_update" : 1522603444853,
+    "path" : "~/fiverr/Rshiny/www/script.js",
+    "project_path" : "www/script.js",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 8,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "js"
+}
