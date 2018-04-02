@@ -1,10 +1,13 @@
-source("global.R")
-source("global_2.R")
-library(tidyquant)
+#1. GetMyData.R -> filename ==> data1
+#2. Preprocessing -> data,channel ==> data1
+#3. Aggregation ->data,channel,filename,aggregater ==> pac
+source("Lib.R")
+source("GetMyData.R")
+source("Preprocessing.R")
+source("Aggregation.R")
+source("MyPlots.R")
+
 server <- function(input, output,session) {
-  
-  
-  
   output$sectortable <- renderTable({
     
       data<-c("SC1_MEJA k. Mengusovce - k. PP Západ",
@@ -29,27 +32,23 @@ server <- function(input, output,session) {
   
   
   observeEvent(
-    input$dashboardselect1,{
-        output$plot11 <- renderPlotly({
-            #Plot of aggregation by SpeedBins
-          plot_ly(pac, x = ~Index, y = ~SP1 , name = 'Number of cars in time aggregated')%>%
-              add_trace(y = ~SP1, name = '0-50km/h', mode = 'lines') %>%
-              add_trace(y = ~SP2, name = '50-60km/h', mode = 'lines') %>%
-              add_trace(y = ~SP3, name = '60-70km/h', mode = 'lines') %>%
-              add_trace(y = ~SP4, name = '70-80km/h', mode = 'lines') %>%
-              add_trace(y = ~SP5, name = '80-90km/h', mode = 'lines') %>%
-              add_trace(y = ~SP6, name = '90-100km/h', mode = 'lines') %>%
-              add_trace(y = ~SP7, name = '100-110km/h', mode = 'lines') %>%
-              add_trace(y = ~SP8, name = '110-120km/h', mode = 'lines') %>%
-              add_trace(y = ~SP9, name = '120-130km/h', mode = 'lines') %>%
-              add_trace(y = ~SP10, name = '130-140km/h', mode = 'lines') %>%
-              add_trace(y = ~SP11, name = '140-150km/h', mode = 'lines') %>%
-              add_trace(y = ~SP12, name = '150-160km/h', mode = 'lines') %>%
-              add_trace(y = ~SP13, name = '160-180km/h', mode = 'lines')%>%
-              add_trace(y = ~SP14, name = '180-999km/h', mode = 'lines')%>%
-              add_trace(y = ~SUM, name = 'TOTAL', mode = 'lines')
+    input$selectfile,{
+      print(input$selectfile)
+      data1<-function.getMyData(input$selectfile)
+      View(data1)
+      data1<-function.MyPreprocessing(data1,input$selectchannel)
+      pac<-function.MyAggregation(data1,input$selectchannel,input$selectfile,input$selectdataaggregation)
       
-          })
+      if(input$selectdataset=="speed"){
+        output$plot11 <- function.MyPlotSpeedBins(pac)
+        
+      }else if(input$selectdataset=="length"){
+        output$plot11 <- function.MyPlotLengthBins(pac)
+        
+      }else {
+        output$plot11 <- function.MyPlotWeightBins(pac)
+      }
+      
     },ignoreInit = TRUE)
   
     

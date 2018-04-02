@@ -40,7 +40,7 @@ sidebar <- dashboardSidebar(width = 325,
               menuItem("Dashboard", tabName = "dashboard", icon = icon("dashboard")),
               conditionalPanel(
                 "input.sidebarmenu == 'dashboard'",
-                selectInput("dashboardselect1", "Select Sector:",choices = list("Sector 1" = "SC1", "Sector 2" = "SC2","Sector 3" = "SC3","Sector 4" = "SC4","Sector 5" = "SC5"),
+                selectInput("selectfile", "Select Sector:",choices = list("All " = "all","Sector 1" = "SC1", "Sector 2" = "SC2","Sector 3" = "SC3","Sector 4" = "SC4","Sector 5" = "SC5"),
                             selected = 1),
                 dateRangeInput("daterange", "Date Range:"),
                 selectInput("selectchannel", "Select Channel:",choices = list("Channel 1" = 1, "Channel 2" = 2,"Channel 3" = 3,"Channel 4" = 4), selected = 1),

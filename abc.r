@@ -13,7 +13,7 @@ library(caret)
 library(e1071)
 library(dplyr)
 #library(h2o)        # Awesome ML Library
-#library(timetk)     # Toolkit for working with time series in R
+library(timetk)     # Toolkit for working with time series in R
 library(tidyquant)
 library(anomalyDetection)
 library(TSMining)
@@ -433,47 +433,4 @@ pac$cnt_ma30 = ma(pac$SUM, order=30)
  # estimate skill of LDA on the validation dataset
  predictions <- predict(fit.lda, validation)
  confusionMatrix(predictions, validation$CHANNEL)
- 
- 
- 
- 
- 
- 
- 
- 
- 
-
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
  

@@ -1,0 +1,29 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1522656311557.000,
+    "dirty" : false,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "7109F97F",
+    "lastKnownWriteTime" : 0,
+    "last_content_update" : 1522656311557,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "cacheKey" : "34061E9C",
+        "caption" : "splitH",
+        "contentUrl" : "grid_resource/gridviewer.html?env=_rs_no_env&obj=splitH&cache_key=34061E9C",
+        "displayedObservations" : "1",
+        "environment" : "_rs_no_env",
+        "object" : "splitH",
+        "preview" : "0",
+        "totalObservations" : "1",
+        "variables" : "4"
+    },
+    "relative_order" : 10,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_dataframe"
+}
