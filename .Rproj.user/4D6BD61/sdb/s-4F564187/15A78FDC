@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "## Aggregation ##\n\n\n\n#===========================AGGREGATION==========================\n\nfunction.MyAggregation<- function(data1, channel, filename,aggregater) {\n  \n  filename<-paste0(filename,\"_MEJA\")\n  heading=\"PP\"\n  if(channel==\"CHANNEL3\" || channel==\"CHANNEL4\"){\n    heading=\"LM\"\n  }\n  #filter <- filter(data1, CHANNEL == \"PP\", FILENAME == \"SC1_MEJA\")\n  filter <- filter(data1, CHANNEL == heading, FILENAME == filename)\n  df_XCV <- data1\n  abc <- df_XCV$Date_Time\n  df_XCV <- select_if(df_XCV, is.numeric)\n  df_XCV$Date_Time <- abc\n  df_XCV <- df_XCV[, c(ncol(df_XCV), 1:(ncol(df_XCV) - 1))]\n  #Create time series object\n  df_XCV_xts <-\n    xts(df_XCV[,-1], order.by = as.POSIXct(df_XCV$Date_Time, tzone = Sys.getenv(\"TZ\")))\n  \n  #ep <- endpoints(df_XCV_xts, on = \"hours\")\n  ep <- endpoints(df_XCV_xts, on = aggregater)\n  pac <-\n    period.apply(df_XCV_xts[, (names(df_XCV_xts))], INDEX = ep, FUN = mean)\n  #Time series to DF\n  pac <- fortify(pac)\n  pac <-  select(pac,-c(PEAKINT, INTERVAL))\n  pac <- tk_augment_timeseries_signature(pac)\n  #source(\"Aggregation_Date.R\")\n  #source(\"Aggregation_Date_Time.R\")\n   pac\n}",
+    "created" : 1522653609243.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2434784664",
+    "id" : "15A78FDC",
+    "lastKnownWriteTime" : 1522655967,
+    "last_content_update" : 1522655967197,
+    "path" : "~/fiverr/Rshiny/Aggregation.R",
+    "project_path" : "Aggregation.R",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 5,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

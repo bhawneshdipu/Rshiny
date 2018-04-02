@@ -44,9 +44,9 @@ function.MyPlotLengthBins<-function(pac){
 function.MyPlotWeightBins<-function(pac){
   renderPlotly({
     #Plot of aggregation by WeigthBins
-    plot_ly(agg_CS, x = ~Date, y = ~CS1 , name = 'Number of cars in time aggregated')%>%
+    plot_ly(data1, x = ~Date, y = ~CS1 , name = 'Number of cars in time aggregated')%>%
       add_trace(y = ~CS1, name = '0-2000 kg', mode = 'lines') %>%
-      #add_trace(y = ~CS2, name = '2000-3501 kg', mode = 'lines') %>%
+      add_trace(y = ~CS2, name = '2000-3501 kg', mode = 'lines') %>%
       add_trace(y = ~CS3, name = '3501-7497 kg', mode = 'lines') %>%
       add_trace(y = ~CS4, name = '7497-12002 kg', mode = 'lines') %>%
       add_trace(y = ~CS5, name = '12002-17998  kg', mode = 'lines') %>%

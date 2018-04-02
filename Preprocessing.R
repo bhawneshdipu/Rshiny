@@ -5,7 +5,6 @@
 
 function.MyPreprocessing<-function(data1,channel) {
   
-  channel<-paste0("CHANNEL",channel)
   
   
   #chnge format of Date
@@ -68,19 +67,29 @@ function.MyPreprocessing<-function(data1,channel) {
   data1$SUM <- rowSums(data1[, 5:18])
   
   #unfinished preparation I will explain what I need
+  
   splitH <- str_split_fixed(data1$HEADINGS, " ", 4)
   splitH <- as.data.frame(splitH)
   splitH <- unique(splitH)
-  View(data1)
-  data1$CHANNEL1 <- data1$CHANNEL
+  # View(splitH)
+  # View(data1)
+  # View(colnames(splitH))
+  # View(colnames(splitH)[2])
+  
+  #commented to get only channel data
+  
+  #data1$CHANNEL1 <- data1$CHANNEL
+  
+  data1<-data1[data1$CHANNEL==paste0(channel),]
+  
+  
   colnames(splitH) <- "CHANNEL1"
   colnames(splitH)[2] <- "CHANNEL2"
   colnames(splitH)[3] <- "CHANNEL3"
   colnames(splitH)[4] <- "CHANNEL4"
-  View(splitH)
+  #View(splitH)
   splitH$rowNames <- row.names.data.frame(splitH)
   #replace.if
-  
   # for (i in vector) {
   #   data1$CHANNEL<-gsub("1", splitH[1,1], data1$CHANNEL)
   #   data1$CHANNEL<-gsub("2", splitH[1,2], data1$CHANNEL)
@@ -90,10 +99,13 @@ function.MyPreprocessing<-function(data1,channel) {
   
   
   #data1$CHANNEL <-do.call(paste, c(data1[c("CHANNEL1", "CHANNEL")], sep = "_"))
-  data1$CHANNEL <-do.call(paste, c(data1[c(channel, "CHANNEL")], sep = "_"))
+  
+  #data1$CHANNEL <-do.call(paste, c(data1[c(paste0("CHANNEL",channel), "CHANNEL")], sep = "_"))
+  #commented by dipu
+  #data1$CHANNEL <- do.call(paste,c(data1[c("CHANNEL1","CHANNEL")],sep = "_"))
+  
   data1$CHANNEL = as.factor(data1$CHANNEL)
   data1$Time = as.factor(data1$Time)
-  data1$CHANNEL1 <- NULL
   
   data1
 }

@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "## MyFunctions ##\n\ndipu.dashboard<-function(input,output){\n  #print(input$selectfile)\n  data1<-function.getMyData(input$selectfile)\n  #View(data1)\n  data1<-function.MyPreprocessing(data1,input$selectchannel)\n  pac<-function.MyAggregation(data1,input$selectchannel,input$selectfile,input$selectdataaggregation)\n  \n  if(input$selectdataset==\"speed\"){\n    output$plot11 <- function.MyPlotSpeedBins(pac)\n    \n  }else if(input$selectdataset==\"length\"){\n    output$plot11 <- function.MyPlotLengthBins(pac)\n    \n  }else {\n    output$plot11 <- function.MyPlotWeightBins(pac)\n  }\n}",
+    "created" : 1522690944628.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2123956726",
+    "id" : "F2E46456",
+    "lastKnownWriteTime" : 1522691232,
+    "last_content_update" : 1522691232958,
+    "path" : "~/fiverr/Rshiny/MyFunctions.R",
+    "project_path" : "MyFunctions.R",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 9,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

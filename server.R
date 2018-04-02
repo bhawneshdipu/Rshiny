@@ -6,6 +6,7 @@ source("GetMyData.R")
 source("Preprocessing.R")
 source("Aggregation.R")
 source("MyPlots.R")
+source("MyFunctions.R")
 
 server <- function(input, output,session) {
   output$sectortable <- renderTable({
@@ -22,33 +23,28 @@ server <- function(input, output,session) {
     },striped = TRUE,hover = TRUE,bordered = TRUE,spacing = c("l"),width = "auto"
   )
   
-  
-  
-  #isolate({updateTabItems(session, "mysidebar", "dashboard")})
-  
   graphics.off()
-  
   pdf(NULL)
-  
-  
   observeEvent(
     input$selectfile,{
-      print(input$selectfile)
-      data1<-function.getMyData(input$selectfile)
-      View(data1)
-      data1<-function.MyPreprocessing(data1,input$selectchannel)
-      pac<-function.MyAggregation(data1,input$selectchannel,input$selectfile,input$selectdataaggregation)
-      
-      if(input$selectdataset=="speed"){
-        output$plot11 <- function.MyPlotSpeedBins(pac)
-        
-      }else if(input$selectdataset=="length"){
-        output$plot11 <- function.MyPlotLengthBins(pac)
-        
-      }else {
-        output$plot11 <- function.MyPlotWeightBins(pac)
-      }
-      
+      dipu.dashboard(input,output)
+    },ignoreInit = TRUE)
+  
+  observeEvent(
+    input$selectchannel,{
+      dipu.dashboard(input,output)
+    },ignoreInit = TRUE)
+  observeEvent(
+    input$selectdataset,{
+      dipu.dashboard(input,output)
+    },ignoreInit = TRUE)
+  observeEvent(
+    input$selectdataaggregation,{
+      dipu.dashboard(input,output)
+    },ignoreInit = TRUE)
+  observeEvent(
+    input$daterange,{
+      dipu.dashboard()
     },ignoreInit = TRUE)
   
     
