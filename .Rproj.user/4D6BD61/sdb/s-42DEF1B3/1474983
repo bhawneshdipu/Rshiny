@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "## GetMyData.R ##\n\nfunction.getMyData<-function(name=\"all\"){\n  \n  \n  folder <- \"./\"\n  setwd(\"./\")\n  \n  if(file.exists(paste0(name,\"_\",\".Rda\"))){\n    local({\n      load(paste0(name,\"_\",\".Rda\"))\n      return (paste0(name,\"_\"))\n    })\n  }\n  tmpname<-name\n  if(name==\"all\"){\n    tmpname<-\"\"\n  }\n  \n  file_pattern=paste0(tmpname,\"(.)*(.csv$)\")\n  #file_list <- list.files(path=folder, pattern=file_pattern,recursive = TRUE,full.names = TRUE) # create list of all .csv files in folder\n  file_list <- list.files(path=folder, pattern=file_pattern,recursive = TRUE,full.names = TRUE)\n  # read in each .csv file in file_list and rbind them into a data frame called data1\n  raw_data <- \n    do.call(\"rbind\", \n            lapply(file_list, \n                   function(x){\n                     message(x)\n                     read_csv(x)\n                   } \n                  )\n            )\n  \n  #data <- data[is.finite(rowSums(data)),]\n  save(raw_data,file=paste0(name,\"_\",\".Rda\"))\n  return(raw_data)\n}\n",
+    "created" : 1522654674707.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "661281017",
+    "id" : "1474983",
+    "lastKnownWriteTime" : 1522781660,
+    "last_content_update" : 1522781660642,
+    "path" : "~/fiverr/Rshiny/GetMyData.R",
+    "project_path" : "GetMyData.R",
+    "properties" : {
+    },
+    "relative_order" : 8,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

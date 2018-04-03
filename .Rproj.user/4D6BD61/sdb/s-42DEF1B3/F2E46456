@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "## MyFunctions ##\n\ndipu.dashboard<-function(input,output){\n  #print(input$selectfile)\n  data1<-function.getMyData(input$selectfile)\n  #View(data1)\n  data1<-function.MyPreprocessing(data1,input$selectchannel,input$selectdaterange)\n  pac<-function.MyAggregation(data1,input$selectchannel,input$selectfile,input$selectdataaggregation)\n  \n  if(input$selectdataset==\"speed\"){\n    output$plot11 <- function.MyPlotSpeedBins(pac)\n    \n  }else if(input$selectdataset==\"length\"){\n    output$plot11 <- function.MyPlotLengthBins(pac)\n    \n  }else {\n    output$plot11 <- function.MyPlotWeightBins(pac)\n  }\n}\ndipu.boxplot<-function(input,output,session){\n  data1<-function.getMyData(input$selectfile)\n  #View(data1)\n  data1<-function.MyPreprocessing(data1,input$selectchannel,input$selectdaterange)\n  pac<-function.MyAggregation(data1,input$selectchannel,input$selectfile,input$selectdataaggregation)\n  \n  output$plot21 <- function.MyBoxPlot1(pac)\n  output$plot22 <- function.MyBoxPlot2(pac,input$selectboxplotx,input$selectboxploty,input$selectcolor)\n  \n}\ndipu.anomalydetection<-function(input,output,session){\n  \n  output$plot31<-function.MyAnomalyDetection(pac,input$selectanomalyx,input$selectanomalyy,input$selectperiod,input$selectlastonly)\n}\n\ndipu.motifdiscovery<-function(input,output,session){\n  output$plot41<-function.MyMotifDiscovery(pac,input$selectmotifx,input$selectmotify)\n}\ndipu.machinelearning<-function(input,output,session){\n  output$plot51<-function.MyMachineLearning(data1)\n}\ndipu.linearregression<-function(input,output,session){\n  output$plot61<-function.MyLinearRegression(pac)\n}\ndipu.arima<-function(input,output,session){\n  output$plot71<-function.MyArima(pac)\n}",
+    "created" : 1522690944628.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2082608806",
+    "id" : "F2E46456",
+    "lastKnownWriteTime" : 1522786901,
+    "last_content_update" : 1522786901585,
+    "path" : "~/fiverr/Rshiny/MyFunctions.R",
+    "project_path" : "MyFunctions.R",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 9,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

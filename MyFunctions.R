@@ -31,3 +31,16 @@ dipu.anomalydetection<-function(input,output,session){
   
   output$plot31<-function.MyAnomalyDetection(pac,input$selectanomalyx,input$selectanomalyy,input$selectperiod,input$selectlastonly)
 }
+
+dipu.motifdiscovery<-function(input,output,session){
+  output$plot41<-function.MyMotifDiscovery(pac,input$selectmotifx,input$selectmotify)
+}
+dipu.machinelearning<-function(input,output,session){
+  output$plot51<-function.MyMachineLearning(data1)
+}
+dipu.linearregression<-function(input,output,session){
+  output$plot61<-function.MyLinearRegression(pac)
+}
+dipu.arima<-function(input,output,session){
+  output$plot71<-function.MyArima(pac)
+}

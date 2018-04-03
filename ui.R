@@ -15,9 +15,9 @@ header <- dashboardHeader(title = "Visualization", titleWidth = 325,tags$li(clas
                                                     href="#shiny-tab-anomalydetection","data-toggle"="tab",
                                                     "data-value"="anomalydetection" ,"aria-expanded"="true")
                                           ),tags$li(class = "dropdown",  
-                                                    a(icon("sliders"),tags$b("Motif Discovery Detection",class="nav-text"),
-                                                      href="#shiny-tab-motifdiscoverydetection","data-toggle"="tab",
-                                                      "data-value"="motifdiscoverydetection" ,"aria-expanded"="true")
+                                                    a(icon("sliders"),tags$b("Motif Discovery",class="nav-text"),
+                                                      href="#shiny-tab-motifdiscovery","data-toggle"="tab",
+                                                      "data-value"="motifdiscovery" ,"aria-expanded"="true")
                                           ),tags$li(class = "dropdown",  
                                                             a(icon("heartbeat"),tags$b("Machine Learning",class="nav-text"),
                                                               href="#shiny-tab-machinelearning","data-toggle"="tab",
@@ -70,21 +70,22 @@ sidebar <- dashboardSidebar(width = 325,
                                selectInput("selectanomalyx","X-axis:",choices=list("Index"="Index","SP11"="SP11"),selected="Index"),
                                selectInput("selectanomalyy","Y-axis:",choices=list("Index"="Index","SP11"="SP11"),selected = "SP11")
               ),
-              menuItem("Motif Discovery Detection", icon = icon("th"), tabName = "motifdiscoverydetection"),
-              conditionalPanel("input.sidebarmenu === 'motifdiscoverydetection'",
-                               sliderInput("x", "Scientific", 1, 100, 50)
+              menuItem("Motif Discovery", icon = icon("th"), tabName = "motifdiscovery"),
+              conditionalPanel("input.sidebarmenu === 'motifdiscovery'",
+                               selectInput("selectmotifx","X-axis:",choices=list("Index"="Index","SP11"="SP11","SP12"="SP12"),selected="SP12"),
+                               selectInput("selectmotify","Y-axis:",choices=list("Index"="Index","SP11"="SP11"),selected = "SP11")
               ),
               menuItem("Machine Learning", icon = icon("th"), tabName = "machinelearning"),
               conditionalPanel("input.sidebarmenu === 'machinelearning'",
-                               sliderInput("x", "Scientific", 1, 100, 50)
+                               sliderInput("machinelearningslider", "Scientific", 1, 100, 50)
               ),
               menuItem("Linear Regression", icon = icon("th"), tabName = "linearregression"),
               conditionalPanel("input.sidebarmenu === 'linearregression'",
-                               sliderInput("x", "Scientific", 1, 100, 50)
+                               sliderInput("linearregressionslider", "Scientific", 1, 100, 50)
               ),
               menuItem("ARIMA", icon = icon("th"), tabName = "arima"),
               conditionalPanel("input.sidebarmenu === 'arima'",
-                               sliderInput("x", "Scientific", 1, 100, 50)
+                               sliderInput("arimaslider", "Scientific", 1, 100, 50)
               )
               
               
@@ -125,32 +126,21 @@ body <- dashboardBody(
               )
             )
     ),
+    tabItem(tabName = "motifdiscovery",
+            fluidRow(
+              column(12,
+                     plotOutput("plot41", height = 300)
+              )
+            )
+    ),
     tabItem(tabName = "machinelearning",
             fluidRow(
               column(12,
-                     plotlyOutput("plot41", height = 300)
+                     plotlyOutput("plot51", height = 300)
               )
-            ),
-            fluidRow(
-              column(12,
-                     plotlyOutput("plot42", height = 300)
-              )
-          )
+            )
   ),
   tabItem(tabName = "linearregression",
-          fluidRow(
-            column(12,
-                   plotlyOutput("plot51", height = 300)
-            )
-          ),
-          fluidRow(
-            column(12,
-                   plotlyOutput("plot52", height = 300)
-            )
-          )
-          
-  ),
-  tabItem(tabName = "arima",
           fluidRow(
             column(12,
                    plotlyOutput("plot61", height = 300)
@@ -159,6 +149,19 @@ body <- dashboardBody(
           fluidRow(
             column(12,
                    plotlyOutput("plot62", height = 300)
+            )
+          )
+          
+  ),
+  tabItem(tabName = "arima",
+          fluidRow(
+            column(12,
+                   plotlyOutput("plot71", height = 300)
+            )
+          ),
+          fluidRow(
+            column(12,
+                   plotlyOutput("plot72", height = 300)
             )
           )
   )

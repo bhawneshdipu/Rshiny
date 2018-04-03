@@ -23,26 +23,27 @@ server <- function(input, output,session) {
     },striped = TRUE,hover = TRUE,bordered = TRUE,spacing = c("l"),width = "auto"
   )
   
+  
   graphics.off()
   pdf(NULL)
   ##=================== Dashboard======================== ##
   observeEvent(
     input$selectfile,{
       dipu.dashboard(input,output)
-    },ignoreInit = FALSE)
+    },ignoreInit = TRUE)
   
   observeEvent(
     input$selectchannel,{
       dipu.dashboard(input,output)
-    },ignoreInit = FALSE)
+    },ignoreInit = TRUE)
   observeEvent(
     input$selectdataset,{
       dipu.dashboard(input,output)
-    },ignoreInit = FALSE)
+    },ignoreInit = TRUE)
   observeEvent(
     input$selectdataaggregation,{
       dipu.dashboard(input,output)
-    },ignoreInit = FALSE)
+    },ignoreInit = TRUE)
   observeEvent(
     input$daterange,{
       dipu.dashboard(input,output)
@@ -58,15 +59,15 @@ server <- function(input, output,session) {
   observeEvent(
     input$selectcolor,{
       dipu.boxplot(input,output,session)
-    },ignoreInit = FALSE)
+    },ignoreInit = TRUE)
   observeEvent(
     input$selectboxploty,{
       dipu.boxplot(input,output,session)
-    },ignoreInit = FALSE)
+    },ignoreInit = TRUE)
   observeEvent(
     input$selectboxplotx,{
       dipu.boxplot(input,output,session)
-    },ignoreInit = FALSE)
+    },ignoreInit = TRUE)
   
   ##=============================== Anomaly Detection========================= ##
   choices = setNames(colnames(pac),colnames(pac))
@@ -92,6 +93,48 @@ server <- function(input, output,session) {
     input$selectperiod,{
       dipu.anomalydetection(input,output,session)
     },ignoreInit = TRUE)
+  
+  #==================================Motif discovery=======================================
+  choices = setNames(colnames(pac),colnames(pac))
+  updateSelectInput(session,"selectmotifx","Select X:",choices=choices,selected="SP12")
+  updateSelectInput(session,"selectmotify","Select Y:",choices=choices,selected="SP11")
+  
+  observeEvent(
+    input$selectmotifx,{
+      dipu.motifdiscovery(input,output,session)
+    },ignoreInit = TRUE)
+  
+  observeEvent(
+    input$selectmotify,{
+      dipu.motifdiscovery(input,output,session)
+    },ignoreInit = TRUE)
+  
+  #=========================MACHINE LEARNING========================
+  observeEvent(
+    input$machinelearningslider,{
+      dipu.machinelearning(input,output,session)
+    },ignoreInit = FALSE)
+  
+  
+  
+  #====================================timetk + linear regression: MAPE = 4.3% (timetk demo)==================================
+  
+  observeEvent(
+    input$linearregressionslider,{
+      dipu.linearregression(input,output,session)
+    },ignoreInit = FALSE)
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
   
   
     # output$plot11 <- renderPlotly({

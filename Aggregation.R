@@ -18,9 +18,9 @@ function.MyAggregation<- function(data1, channel, filename,aggregater) {
   df_XCV <- select_if(df_XCV, is.numeric)
   df_XCV$Date_Time <- abc
   df_XCV <- df_XCV[, c(ncol(df_XCV), 1:(ncol(df_XCV) - 1))]
+  
   #Create time series object
-  df_XCV_xts <-
-    xts(df_XCV[,-1], order.by = as.POSIXct(df_XCV$Date_Time, tzone = Sys.getenv("TZ")))
+  df_XCV_xts <-xts(df_XCV[,-1], order.by = as.POSIXct(df_XCV$Date_Time, tzone = Sys.getenv("TZ")))
   
   #ep <- endpoints(df_XCV_xts, on = "hours")
   ep <- endpoints(df_XCV_xts, on = aggregater)
