@@ -3,9 +3,7 @@
 
 #====================Preprocesing===============================
 
-function.MyPreprocessing<-function(data1,channel) {
-  
-  
+function.MyPreprocessing<-function(data1,channel,daterange) {
   
   #chnge format of Date
   data1$Date_Time <- data1$Date
@@ -82,7 +80,12 @@ function.MyPreprocessing<-function(data1,channel) {
   
   data1<-data1[data1$CHANNEL==paste0(channel),]
   
-  
+  #View(daterange)
+  # daterange[0] <- format(as.Date(daterange[0]), "%d-%m-%Y %H:%M:%S")
+  # daterange[1] <- format(as.Date(daterange[1]), "%d-%m-%Y %H:%M:%S")
+  # 
+  # data1<-data1[data1$Date_Time>=daterange[0] & data1$Date_Time<=daterange[1],]
+   
   colnames(splitH) <- "CHANNEL1"
   colnames(splitH)[2] <- "CHANNEL2"
   colnames(splitH)[3] <- "CHANNEL3"

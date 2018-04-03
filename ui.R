@@ -42,7 +42,7 @@ sidebar <- dashboardSidebar(width = 325,
                 "input.sidebarmenu == 'dashboard'",
                 selectInput("selectfile", "Select Sector:",choices = list("All " = "all","Sector 1" = "SC1", "Sector 2" = "SC2","Sector 3" = "SC3","Sector 4" = "SC4","Sector 5" = "SC5"),
                             selected = 1),
-                dateRangeInput("daterange", "Date Range:"),
+                dateRangeInput("selectdaterange", "Date Range:",start="01-02-2017",format = "dd-mm-yyyy"),
                 selectInput("selectchannel", "Select Channel:",choices = list("Channel 1" = 1, "Channel 2" = 2,"Channel 3" = 3,"Channel 4" = 4), selected = 1),
                 selectInput("selectdataset", "Select Dataset:",choices = list("Speed" = "speed", "Length" = "length","Weight" = "weight"), selected = 1),
                 selectInput("selectdataaggregation", "Data Aggregation:",choices = list("Minutes" = "minute", "Hour" = "hour","Day" = "day","Week" = "week","Month" = "month","Quarter" = "quarter","Year" = "year"), selected = 1)
@@ -50,11 +50,25 @@ sidebar <- dashboardSidebar(width = 325,
               ),
               menuItem("Box Plot", icon = icon("th"), tabName = "boxplot" ),
               conditionalPanel("input.sidebarmenu === 'boxplot'",
-                               sliderInput("b", "Under Basic", 1, 100, 50)
+                               selectInput("selectcolor", "Select Color:",
+                                           choices = list("wday.lbl " = "wday.lbl",
+                                                          "Year.iso" = "year.iso",
+                                                          "Half" = "half",
+                                                          "Quarter"="quarter",
+                                                          "Month" = "month",
+                                                          "AM.PM" = "am.pm"),
+                                           selected = 1),
+                               
+                               selectInput("selectboxplotx","X-axis:",choices=list("SUM"="SUM","SP1"="SP1")),
+                               selectInput("selectboxploty","Y-axis:",choices=list("SUM"="SUM","SP1"="SP1"))
+                               
               ),
               menuItem("Anomaly Detection", icon = icon("th"), tabName = "anomalydetection"),
               conditionalPanel("input.sidebarmenu === 'anomalydetection'",
-                               sliderInput("b", "Under Time series", 1, 100, 50)
+                               sliderInput("selectperiod", "Period", 1, 200, 2),
+                               checkboxInput("selectlastonly", "Last Only:", value = FALSE, width = NULL),
+                               selectInput("selectanomalyx","X-axis:",choices=list("Index"="Index","SP11"="SP11"),selected="Index"),
+                               selectInput("selectanomalyy","Y-axis:",choices=list("Index"="Index","SP11"="SP11"),selected = "SP11")
               ),
               menuItem("Motif Discovery Detection", icon = icon("th"), tabName = "motifdiscoverydetection"),
               conditionalPanel("input.sidebarmenu === 'motifdiscoverydetection'",
@@ -108,11 +122,6 @@ body <- dashboardBody(
             fluidRow(
               column(12,
                      plotlyOutput("plot31", height = 300)
-              )
-            ),
-            fluidRow(
-              column(12,
-                     plotlyOutput("plot32", height = 300)
               )
             )
     ),

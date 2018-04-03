@@ -19,7 +19,7 @@ library(anomalyDetection)
 library(TSMining)
 #install.packages("devtools")
 devtools::install_github("twitter/AnomalyDetection")
-library(anomalyDetection)
+library(AnomalyDetection)
 packageVersion('plotly')
 
 
@@ -253,16 +253,19 @@ plot_ly(pac, x = ~wday.lbl, y = ~SP1, type = 'bar', name = "0-50km/h") %>%
    layout(boxmode = "group")
 
  #==================================Anomaly detection=======================================
- SUM_DATA <- pac[,c(1,12)]
+View(pac)
+ View(pac[,c(1,12)])
+  SUM_DATA <- pac[,c(1,12)]
  abc <- as.numeric(rownames(SUM_DATA))
  ggplot(pac, aes(x=Index, y=SP11)) + geom_line()
  
  res = AnomalyDetectionTs(SUM_DATA, max_anoms=0.01, direction="pos", plot=TRUE, e_value = T)
  
- res = AnomalyDetectionVec(SUM_DATA[,2], max_anoms=0.01, period=96, direction='both',
+ res = AnomalyDetectionVec(SUM_DATA[,2], max_anoms=0.01, period=2, direction='both',
                            only_last=FALSE, plot=TRUE)
 
  anomaly_table=res$anoms
+ 
  SUM_DATA$Index_row <- abc
  anomaly_table<-merge(SUM_DATA,anomaly_table,by.x = "Index_row",by.y = "index")
  

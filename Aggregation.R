@@ -24,8 +24,7 @@ function.MyAggregation<- function(data1, channel, filename,aggregater) {
   
   #ep <- endpoints(df_XCV_xts, on = "hours")
   ep <- endpoints(df_XCV_xts, on = aggregater)
-  pac <-
-    period.apply(df_XCV_xts[, (names(df_XCV_xts))], INDEX = ep, FUN = mean)
+  pac <-period.apply(df_XCV_xts[, (names(df_XCV_xts))], INDEX = ep, FUN = mean)
   #Time series to DF
   pac <- fortify(pac)
   pac <-  select(pac,-c(PEAKINT, INTERVAL))

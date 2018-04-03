@@ -25,29 +25,75 @@ server <- function(input, output,session) {
   
   graphics.off()
   pdf(NULL)
+  ##=================== Dashboard======================== ##
   observeEvent(
     input$selectfile,{
       dipu.dashboard(input,output)
-    },ignoreInit = TRUE)
+    },ignoreInit = FALSE)
   
   observeEvent(
     input$selectchannel,{
       dipu.dashboard(input,output)
-    },ignoreInit = TRUE)
+    },ignoreInit = FALSE)
   observeEvent(
     input$selectdataset,{
       dipu.dashboard(input,output)
-    },ignoreInit = TRUE)
+    },ignoreInit = FALSE)
   observeEvent(
     input$selectdataaggregation,{
       dipu.dashboard(input,output)
-    },ignoreInit = TRUE)
+    },ignoreInit = FALSE)
   observeEvent(
     input$daterange,{
-      dipu.dashboard()
+      dipu.dashboard(input,output)
     },ignoreInit = TRUE)
   
-    
+  ##======================= Box Plot ===============================##
+  choices = setNames(colnames(pac),colnames(pac))
+  updateSelectInput(session,"selectboxploty","Select Y:",choices=choices)
+  updateSelectInput(session,"selectboxplotx","Select X:",choices=choices)
+  
+  
+  
+  observeEvent(
+    input$selectcolor,{
+      dipu.boxplot(input,output,session)
+    },ignoreInit = FALSE)
+  observeEvent(
+    input$selectboxploty,{
+      dipu.boxplot(input,output,session)
+    },ignoreInit = FALSE)
+  observeEvent(
+    input$selectboxplotx,{
+      dipu.boxplot(input,output,session)
+    },ignoreInit = FALSE)
+  
+  ##=============================== Anomaly Detection========================= ##
+  choices = setNames(colnames(pac),colnames(pac))
+  updateSelectInput(session,"selectanomalyx","Select X:",choices=choices,selected="Index")
+  updateSelectInput(session,"selectanomalyy","Select Y:",choices=choices,selected="SP11")
+  
+  observeEvent(
+    input$selectlastonly,{
+      dipu.anomalydetection(input,output,session)
+    },ignoreInit = TRUE)
+  
+  observeEvent(
+    input$selectanomalyx,{
+      dipu.anomalydetection(input,output,session)
+    },ignoreInit = TRUE)
+  
+  observeEvent(
+    input$selectanomalyy,{
+      dipu.anomalydetection(input,output,session)
+    },ignoreInit = TRUE)
+  
+  observeEvent(
+    input$selectperiod,{
+      dipu.anomalydetection(input,output,session)
+    },ignoreInit = TRUE)
+  
+  
     # output$plot11 <- renderPlotly({
     #   
     #   
@@ -273,28 +319,5 @@ server <- function(input, output,session) {
   #   
   #   
   # })
-  # output$plot41 <- renderPlotly({
-  #   #boxplot
-  #   plot_ly(pac,y = ~SP1, name = '0-50km/h',type = 'box')%>%
-  #     add_trace(y = ~SP2, name = '50-60km/h', mode = 'lines') %>%
-  #     add_trace(y = ~SP3, name = '60-70km/h', mode = 'lines') %>%
-  #     add_trace(y = ~SP4, name = '70-80km/h', mode = 'lines') %>%
-  #     add_trace(y = ~SP5, name = '80-90km/h', mode = 'lines') %>%
-  #     add_trace(y = ~SP6, name = '90-100km/h', mode = 'lines') %>%
-  #     add_trace(y = ~SP7, name = '100-110km/h', mode = 'lines') %>%
-  #     add_trace(y = ~SP8, name = '110-120km/h', mode = 'lines') %>%
-  #     add_trace(y = ~SP9, name = '120-130km/h', mode = 'lines') %>%
-  #     add_trace(y = ~SP10, name = '130-140km/h', mode = 'lines') %>%
-  #     add_trace(y = ~SP11, name = '140-150km/h', mode = 'lines') %>%
-  #     add_trace(y = ~SP12, name = '150-160km/h', mode = 'lines') %>%
-  #     add_trace(y = ~SP13, name = '160-180km/h', mode = 'lines')%>%
-  #     add_trace(y = ~SP14, name = '180-999km/h', mode = 'lines')%>%
-  #     layout(title = "Boxplot by day of week")
-  #   
-  # })
-  # output$plot42 <- renderPlotly({
-  #   plot_ly(data1,x = ~CHANNEL,y = ~SP11, color = pac['wday.lbl'],type = "box")%>%
-  #     layout(boxmode = "group")
-  # })
-  # 
+   
 }

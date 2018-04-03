@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "## GetMyData.R ##\n\nfunction.getMyData<-function(name=\"all\"){\n  folder <- \"./\"\n  if(name==\"all\"){\n    name=\"\"\n  }\n  file_pattern=paste0(name,\"(.)*(.csv$)\")\n  file_list <- list.files(path=folder, pattern=file_pattern) # create list of all .csv files in folder\n  # read in each .csv file in file_list and rbind them into a data frame called data1 \n  data <- \n    do.call(\"rbind\", \n            lapply(file_list, \n                   function(x) \n                     read_csv(paste(folder, x, sep=''))))\n  \n  \n  data\n  }\n\n",
+    "created" : 1522654674707.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1763770614",
+    "id" : "1474983",
+    "lastKnownWriteTime" : 1522655731,
+    "last_content_update" : 1522655731219,
+    "path" : "~/fiverr/Rshiny/GetMyData.R",
+    "project_path" : "GetMyData.R",
+    "properties" : {
+    },
+    "relative_order" : 8,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
