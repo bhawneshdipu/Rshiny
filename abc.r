@@ -17,6 +17,7 @@ library(timetk)     # Toolkit for working with time series in R
 library(tidyquant)
 library(anomalyDetection)
 library(TSMining)
+library(randomForest)
 #install.packages("devtools")
 devtools::install_github("twitter/AnomalyDetection")
 library(AnomalyDetection)
@@ -115,7 +116,7 @@ splitH$rowNames <-row.names.data.frame(splitH)
 # }
 
 
-data1$CHANNEL <- do.call(paste,c(data1[c("CHANNEL1","CHANNEL")],sep = "_"))
+#data1$CHANNEL <- do.call(paste,c(data1[c("CHANNEL1","CHANNEL")],sep = "_"))
 data1$CHANNEL = as.factor(data1$CHANNEL)
 data1$Time = as.factor(data1$Time)
 data1$CHANNEL1 <- NULL
@@ -404,7 +405,8 @@ pac$cnt_ma30 = ma(pac$SUM, order=30)
  
  # Run algorithms using 10-fold cross validation
  control <- trainControl(method="cv", number=10)
- metric <- "Accuracy"
+ metric = ifelse(is.factor(y), "Accuracy", "RMSE")
+ #metric <- "Accuracy"
  validation_index <- createDataPartition(data1$CHANNEL, p=0.80, list=FALSE)
  # select 20% of the data for validation
  validation <- data1[-validation_index,]
@@ -412,7 +414,10 @@ pac$cnt_ma30 = ma(pac$SUM, order=30)
  dataset <- data1[validation_index,]
  # a) linear algorithms
  set.seed(7)
- fit.lda <- train(SP10 ~ Date_Time,data=data1, method="lda", metric=metric, trControl=control)
+ #fit.lda <- train(SP10 ~ Date_Time,data=data1, method="lda", metric=metric, trControl=control)
+ #fit.lda <- train(SP10 ~ Date_Time,data=data1, method="lda", metric=metric, trControl=control)
+ fit.lda<-lda(SP10 ~ Date_Time,data=data1,metric=metric, trControl=control)
+ 
  # b) nonlinear algorithms
  # CART
  set.seed(7)

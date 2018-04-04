@@ -199,65 +199,70 @@ function.MyMotifDiscovery<-function(pac,myX,myY){
 
 function.MyMachineLearning<-function(data1){
 
-# Shuffle row indices: rows
-rows <- sample(nrow(data1))
-
-# Randomly order data: Sonar
-data1 <- data1[rows,]
-
-# Identify row to split on: split
-split <- round(nrow(data1) * .60)
-
-# Create train
-train <- data1[1:split,]
-
-# Create test
-test <- data1[(split + 1):nrow(data1),]
-#------------------------------------------
-
-# Run algorithms using 10-fold cross validation
-control <- trainControl(method="cv", number=10)
-metric <- "Accuracy"
-validation_index <- createDataPartition(data1$CHANNEL, p=0.80, list=FALSE)
-# select 20% of the data for validation
-validation <- data1[-validation_index,]
-# use the remaining 80% of data to training and testing the models
-dataset <- data1[validation_index,]
-# a) linear algorithms
-set.seed(7)
-fit.lda <- train(SP10 ~ Date_Time,data=data1, method="lda", metric=metric, trControl=control)
-# b) nonlinear algorithms
-# CART
-set.seed(7)
-fit.cart <- train(SP10 ~ Date_Time,data=data1, method="rpart", metric=metric, trControl=control)
-# kNN
-set.seed(7)
-fit.knn <- train(SP10 ~ Date_Time,data=data1, method="knn", metric=metric, trControl=control)
-# c) advanced algorithms
-# SVM
-set.seed(7)
-fit.svm <- train(SP10 ~ Date_Time,data=data1, method="svmRadial", metric=metric, trControl=control)
-# Random Forest
-set.seed(7)
-fit.rf <- train(SP10 ~ Date_Time,data=data1, method="rf", metric=metric, trControl=control)
-
-
-#summarize accuracy of models
-results <- resamples(list(lda=fit.lda, cart=fit.cart, knn=fit.knn, svm=fit.svm, rf=fit.rf))
-summary(results)
-dotplot(results)
-print(fit.lda)
-
-
-# estimate skill of LDA on the validation dataset
-predictions <- predict(fit.lda, validation)
-confusionMatrix(predictions, validation$CHANNEL)
+  
+  # Shuffle row indices: rows
+  rows <- sample(nrow(data1))
+  
+  # Randomly order data: Sonar
+  data1 <- data1[rows,]
+  
+  # Identify row to split on: split
+  split <- round(nrow(data1) * .60)
+  
+  # Create train
+  train <- data1[1:split,]
+  
+  # Create test
+  test <- data1[(split + 1):nrow(data1),]
+  #------------------------------------------
+  
+  # Run algorithms using 10-fold cross validation
+  control <- trainControl(method="cv", number=10)
+  metric = ifelse(is.factor(y), "Accuracy", "RMSE")
+  #metric <- "Accuracy"
+  validation_index <- createDataPartition(data1$CHANNEL, p=0.80, list=FALSE)
+  # select 20% of the data for validation
+  validation <- data1[-validation_index,]
+  # use the remaining 80% of data to training and testing the models
+  dataset <- data1[validation_index,]
+  # a) linear algorithms
+  set.seed(7)
+  #fit.lda <- train(SP10 ~ Date_Time,data=data1, method="lda", metric=metric, trControl=control)
+  #fit.lda <- train(SP10 ~ Date_Time,data=data1, method="lda", metric=metric, trControl=control)
+  fit.lda<-lda(SP10 ~ Date_Time,data=data1,metric=metric, trControl=control)
+  
+  # b) nonlinear algorithms
+  # CART
+  set.seed(7)
+  fit.cart <- train(SP10 ~ Date_Time,data=data1, method="rpart", metric=metric, trControl=control)
+  # kNN
+  set.seed(7)
+  fit.knn <- train(SP10 ~ Date_Time,data=data1, method="knn", metric=metric, trControl=control)
+  # c) advanced algorithms
+  # SVM
+  set.seed(7)
+  fit.svm <- train(SP10 ~ Date_Time,data=data1, method="svmRadial", metric=metric, trControl=control)
+  # Random Forest
+  set.seed(7)
+  fit.rf <- train(SP10 ~ Date_Time,data=data1, method="rf", metric=metric, trControl=control)
+  
+  
+  #summarize accuracy of models
+  results <- resamples(list(lda=fit.lda, cart=fit.cart, knn=fit.knn, svm=fit.svm, rf=fit.rf))
+  summary(results)
+  p<-dotplot(results)
+  print(fit.lda)
+  return(list(p,fit.lda))
+  
+  # estimate skill of LDA on the validation dataset
+  #predictions <- predict(fit.lda, validation)
+  #confusionMatrix(predictions, validation$CHANNEL)
 }
 
+#====================================timetk + linear regression: MAPE = 4.3% (timetk demo)==================================
+
+
 function.MyLinearRegression<-function(pac){
-  
-  #====================================timetk + linear regression: MAPE = 4.3% (timetk demo)==================================
-  
   
   SUM_DATA <- pac[,c(1,31)]
   
@@ -286,6 +291,7 @@ function.MyLinearRegression<-function(pac){
   
   tail(beer_sales_idx)
   
+  Sys.getenv("TZ")  
   # Make future index
   future_idx <- beer_sales_idx %>%
     tk_make_future_timeseries(n_future =10)
@@ -325,7 +331,7 @@ function.MyLinearRegression<-function(pac){
     geom_point(aes(y = SUM),color = palette_light()[[3]], data = actuals_tbl)+
     theme_tq() +
     labs(title = "Time series sum data")
-  return (ggplotly(p)) 
+  #return (ggplotly(p)) 
   
   
   
@@ -371,6 +377,7 @@ function.MyLinearRegression<-function(pac){
   # If timetk_idx is present, can get original dates back 
   tk_tbl(beer_sales_ts, timetk_idx = TRUE, rename_index = "date")
   
+  return(list(p,error_tbl))
   
 }
 

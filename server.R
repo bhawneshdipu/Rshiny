@@ -44,10 +44,12 @@ server <- function(input, output,session) {
     input$selectdataaggregation,{
       dipu.dashboard(input,output)
     },ignoreInit = TRUE)
+  
   observeEvent(
     input$daterange,{
       dipu.dashboard(input,output)
     },ignoreInit = TRUE)
+  
   
   ##======================= Box Plot ===============================##
   choices = setNames(colnames(pac),colnames(pac))

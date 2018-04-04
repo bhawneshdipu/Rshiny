@@ -175,6 +175,7 @@ beer_sales_idx <- SUM_DATA %>%
 
 tail(beer_sales_idx)
 
+Sys.getenv("TZ")
 # Make future index
 future_idx <- beer_sales_idx %>%
   tk_make_future_timeseries(n_future =10)

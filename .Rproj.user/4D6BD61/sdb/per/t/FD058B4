@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "## Lib.R ##\n\nlibrary(readr)\nlibrary(plotly)\nlibrary(stringr)\nlibrary(DataLoader)\nlibrary(forecast)\nlibrary(tseries)\nlibrary(zoo)\nlibrary(xts)\nlibrary(fts)\nlibrary(MASS)\nlibrary(caret)\nlibrary(e1071)\nlibrary(dplyr)\nlibrary(h2o)        # Awesome ML Library\nlibrary(timetk)     # Toolkit for working with time series in R\nlibrary(tidyquant)\nlibrary(anomalyDetection)\nlibrary(TSMining)\nlibrary(randomForest)\n#install.packages(\"devtools\")\ndevtools::install_github(\"twitter/AnomalyDetection\")\nlibrary(AnomalyDetection)\npackageVersion('plotly')\n#devtools::install_github(\"tidyverse/ggplot2\")\n#devtools::install_github('hadley/ggplot2')\nlibrary(ggplot2)\n\n\nlibrary(readr)\nlibrary(ggplot2)\nlibrary(plotly)\nlibrary(stringr)\nlibrary(DataLoader)\nlibrary(ggplot2)\nlibrary(forecast)\nlibrary(tseries)\nlibrary(zoo)\nlibrary(xts)\nlibrary(fts)\nlibrary(MASS)\nlibrary(caret)\nlibrary(e1071)\nlibrary(dplyr)\nlibrary(h2o)        # Awesome ML Library\nlibrary(timetk)     # Toolkit for working with time series in R\nlibrary(tidyquant)\nlibrary(sweep) \nlibrary(lubridate)\nlibrary(tidyquant)\n",
+    "created" : 1522824703161.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1985061002",
+    "id" : "FD058B4",
+    "lastKnownWriteTime" : 1522824723,
+    "last_content_update" : 1522824723500,
+    "path" : "~/fiverr/Rshiny/Lib.R",
+    "project_path" : "Lib.R",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 11,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

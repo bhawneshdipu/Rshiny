@@ -18,6 +18,7 @@ library(timetk)     # Toolkit for working with time series in R
 library(tidyquant)
 library(anomalyDetection)
 library(TSMining)
+library(randomForest)
 #install.packages("devtools")
 devtools::install_github("twitter/AnomalyDetection")
 library(AnomalyDetection)

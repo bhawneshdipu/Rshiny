@@ -5,12 +5,24 @@
 
 function.MyPreprocessing<-function(data1,channel,daterange) {
   
+  fromdate<-as.Date(daterange[0])
+  todate<-as.Date(daterange[1])
   #chnge format of Date
   data1$Date_Time <- data1$Date
   data1$Date_Time <-do.call(paste, c(data1[c("Date_Time", "Time")], sep = ""))
   data1$Date_Time <- as.POSIXct(data1$Date_Time, format = "%d%m%y%H%M")
-  #data1$Date_Time <- as.Date(data1$Date_Time, "%d%m%y%H%M")
-  #data1$Date <- as.POSIXct(data1$Date,format = "%d%m%y")
+  data1$Date_Time <- as.Date(data1$Date_Time, "%d%m%y%H%M")
+  data1$Date <- as.POSIXct(data1$Date,format = "%d%m%y")
+  
+  
+  
+  #View(daterange)
+  fromdate <- format(as.Date(daterange[0]), "%d-%m-%Y %H:%M:%S")
+  todate <- format(as.Date(daterange[1]), "%d-%m-%Y %H:%M:%S")
+  data1<-data1[data1$Date_Time>=fromdate & data1$Date_Time<=todate,]
+  #data1<-date1[date1$Date_Time>=fromdate & date1$Date_Time<=todate,]
+  
+  
   data1 <- data1[, c(ncol(data1), 1:(ncol(data1) - 1))]
   
   
@@ -80,12 +92,6 @@ function.MyPreprocessing<-function(data1,channel,daterange) {
   
   data1<-data1[data1$CHANNEL==paste0(channel),]
   
-  #View(daterange)
-  # daterange[0] <- format(as.Date(daterange[0]), "%d-%m-%Y %H:%M:%S")
-  # daterange[1] <- format(as.Date(daterange[1]), "%d-%m-%Y %H:%M:%S")
-  # 
-  # data1<-data1[data1$Date_Time>=daterange[0] & data1$Date_Time<=daterange[1],]
-   
   colnames(splitH) <- "CHANNEL1"
   colnames(splitH)[2] <- "CHANNEL2"
   colnames(splitH)[3] <- "CHANNEL3"

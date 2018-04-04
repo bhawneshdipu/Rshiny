@@ -138,6 +138,10 @@ body <- dashboardBody(
               column(12,
                      plotlyOutput("plot51", height = 300)
               )
+            ),fluidRow(
+              column(12,
+                     dataTableOutput("table52")
+              )
             )
   ),
   tabItem(tabName = "linearregression",
@@ -145,23 +149,20 @@ body <- dashboardBody(
             column(12,
                    plotlyOutput("plot61", height = 300)
             )
-          ),
-          fluidRow(
-            column(12,
-                   plotlyOutput("plot62", height = 300)
-            )
+          ),fluidRow(
+                  column(12,
+                        dataTableOutput("table62")
+                    )
           )
-          
   ),
   tabItem(tabName = "arima",
           fluidRow(
             column(12,
                    plotlyOutput("plot71", height = 300)
             )
-          ),
-          fluidRow(
+          ),fluidRow(
             column(12,
-                   plotlyOutput("plot72", height = 300)
+                   dataTableOutput("table72")
             )
           )
   )

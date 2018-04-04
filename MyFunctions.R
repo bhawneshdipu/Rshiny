@@ -36,11 +36,18 @@ dipu.motifdiscovery<-function(input,output,session){
   output$plot41<-function.MyMotifDiscovery(pac,input$selectmotifx,input$selectmotify)
 }
 dipu.machinelearning<-function(input,output,session){
-  output$plot51<-function.MyMachineLearning(data1)
+  
+  dataplot<-function.MyMachineLearning(data1)
+  output$plot51<-renderPlotly(dataplot[0])
+  output$table52<-DT::renderDataTable({inspect(dataplot[1])})
 }
 dipu.linearregression<-function(input,output,session){
-  output$plot61<-function.MyLinearRegression(pac)
+  dataplot<-function.MyLinearRegression(pac)
+  output$plot61<-renderPlotly(dataplot[0])
+  output$table62<-DT::renderDataTable({inspect(dataplot[1])})
 }
 dipu.arima<-function(input,output,session){
-  output$plot71<-function.MyArima(pac)
+  dataplot<-function.MyArima(pac)
+  output$plot71<-renderPlotly(dataplot[0])
+  output$table72<-DT::renderDataTable({inspect(dataplot[1])})
 }
