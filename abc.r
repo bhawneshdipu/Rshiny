@@ -19,7 +19,7 @@ library(anomalyDetection)
 library(TSMining)
 library(randomForest)
 #install.packages("devtools")
-devtools::install_github("twitter/AnomalyDetection")
+#devtools::install_github("twitter/AnomalyDetection")
 library(AnomalyDetection)
 packageVersion('plotly')
 
@@ -41,7 +41,7 @@ data1 <-
 data1$Date_Time <- data1$Date
 data1$Date_Time <- do.call(paste,c(data1[c("Date_Time","Time")],sep = ""))
 data1$Date_Time <- as.POSIXct(data1$Date_Time,format = "%d%m%y%H%M")
-#data1$Date_Time <- as.Date(data1$Date_Time, "%d%m%y%H%M")
+data1$Date_Time <- as.Date(data1$Date_Time, "%d%m%y%H%M")
 #data1$Date <- as.POSIXct(data1$Date,format = "%d%m%y")
 data1<-data1[,c(ncol(data1),1:(ncol(data1)-1))]
 
@@ -405,8 +405,8 @@ pac$cnt_ma30 = ma(pac$SUM, order=30)
  
  # Run algorithms using 10-fold cross validation
  control <- trainControl(method="cv", number=10)
- metric = ifelse(is.factor(y), "Accuracy", "RMSE")
- #metric <- "Accuracy"
+ #metric = ifelse(is.factor(y), "Accuracy", "RMSE")
+ metric <- "Accuracy"
  validation_index <- createDataPartition(data1$CHANNEL, p=0.80, list=FALSE)
  # select 20% of the data for validation
  validation <- data1[-validation_index,]

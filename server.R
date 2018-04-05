@@ -1,16 +1,10 @@
-#1. GetMyData.R -> filename ==> data1
-#2. Preprocessing -> data,channel ==> data1
-#3. Aggregation ->data,channel,filename,aggregater ==> pac
-source("Lib.R")
-source("GetMyData.R")
-source("Preprocessing.R")
-source("Aggregation.R")
-source("MyPlots.R")
-source("MyFunctions.R")
-
+source("global.R")
 server <- function(input, output,session) {
+  message("Server ")
+  ##browser()
   output$sectortable <- renderTable({
-    
+    message("rander table")
+    ##browser()
       data<-c("SC1_MEJA k. Mengusovce - k. PP Západ",
               "SC2_MEJA k. PP Západ - k. Vysoké Tatry",
               "SC3_MEJA k. Vysoké Tatry - k. PP Východ",
@@ -29,30 +23,30 @@ server <- function(input, output,session) {
   ##=================== Dashboard======================== ##
   observeEvent(
     input$selectfile,{
-      dipu.dashboard(input,output)
-    },ignoreInit = TRUE)
+      dipu.dashboard(input,output,session)
+    },ignoreInit = FALSE)
   
   observeEvent(
     input$selectchannel,{
-      dipu.dashboard(input,output)
+      dipu.dashboard(input,output,session)
     },ignoreInit = TRUE)
   observeEvent(
     input$selectdataset,{
-      dipu.dashboard(input,output)
+      dipu.dashboard(input,output,session)
     },ignoreInit = TRUE)
   observeEvent(
     input$selectdataaggregation,{
-      dipu.dashboard(input,output)
+      dipu.dashboard(input,output,session)
     },ignoreInit = TRUE)
   
   observeEvent(
     input$daterange,{
-      dipu.dashboard(input,output)
+      dipu.dashboard(input,output,session)
     },ignoreInit = TRUE)
   
   
   ##======================= Box Plot ===============================##
-  choices = setNames(colnames(pac),colnames(pac))
+  choices = setNames(colnames(dipu.pre_data),colnames(dipu.pre_data))
   updateSelectInput(session,"selectboxploty","Select Y:",choices=choices)
   updateSelectInput(session,"selectboxplotx","Select X:",choices=choices)
   
@@ -72,7 +66,7 @@ server <- function(input, output,session) {
     },ignoreInit = TRUE)
   
   ##=============================== Anomaly Detection========================= ##
-  choices = setNames(colnames(pac),colnames(pac))
+  choices = setNames(colnames(dipu.pre_data),colnames(dipu.pre_data))
   updateSelectInput(session,"selectanomalyx","Select X:",choices=choices,selected="Index")
   updateSelectInput(session,"selectanomalyy","Select Y:",choices=choices,selected="SP11")
   
@@ -97,7 +91,7 @@ server <- function(input, output,session) {
     },ignoreInit = TRUE)
   
   #==================================Motif discovery=======================================
-  choices = setNames(colnames(pac),colnames(pac))
+  choices = setNames(colnames(dipu.pre_data),colnames(dipu.pre_data))
   updateSelectInput(session,"selectmotifx","Select X:",choices=choices,selected="SP12")
   updateSelectInput(session,"selectmotify","Select Y:",choices=choices,selected="SP11")
   
@@ -115,7 +109,7 @@ server <- function(input, output,session) {
   observeEvent(
     input$machinelearningslider,{
       dipu.machinelearning(input,output,session)
-    },ignoreInit = FALSE)
+    },ignoreInit = TRUE)
   
   
   
@@ -124,7 +118,7 @@ server <- function(input, output,session) {
   observeEvent(
     input$linearregressionslider,{
       dipu.linearregression(input,output,session)
-    },ignoreInit = FALSE)
+    },ignoreInit = TRUE)
   
   
   

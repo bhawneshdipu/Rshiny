@@ -42,10 +42,10 @@ sidebar <- dashboardSidebar(width = 325,
                 "input.sidebarmenu == 'dashboard'",
                 selectInput("selectfile", "Select Sector:",choices = list("All " = "all","Sector 1" = "SC1", "Sector 2" = "SC2","Sector 3" = "SC3","Sector 4" = "SC4","Sector 5" = "SC5"),
                             selected = 1),
-                dateRangeInput("selectdaterange", "Date Range:",start="01-02-2017",format = "dd-mm-yyyy"),
-                selectInput("selectchannel", "Select Channel:",choices = list("Channel 1" = 1, "Channel 2" = 2,"Channel 3" = 3,"Channel 4" = 4), selected = 1),
+                dateRangeInput("selectdaterange", "Date Range:",start="01-01-2016",format = "dd-mm-yyyy"),
+                selectInput("selectchannel", "Select Channel:",choices = list("All"="all","Direction(1,2)"="12","Direction(3,4)"="34","Channel 1" = 1, "Channel 2" = 2,"Channel 3" = 3,"Channel 4" = 4), selected = 1),
                 selectInput("selectdataset", "Select Dataset:",choices = list("Speed" = "speed", "Length" = "length","Weight" = "weight"), selected = 1),
-                selectInput("selectdataaggregation", "Data Aggregation:",choices = list("Minutes" = "minute", "Hour" = "hour","Day" = "day","Week" = "week","Month" = "month","Quarter" = "quarter","Year" = "year"), selected = 1)
+                selectInput("selectdataaggregation", "Data Aggregation:",choices = list("Minutes" = "minutes", "Hour" = "hours","Day" = "days","Week" = "weeks","Months" = "months","Quarter" = "quarter","Year" = "year"), selected = 1)
                 
               ),
               menuItem("Box Plot", icon = icon("th"), tabName = "boxplot" ),

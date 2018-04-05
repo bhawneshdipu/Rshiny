@@ -1,37 +1,23 @@
-## GetMyData.R ##
+## GetRawData.R ##
 
-function.getMyData<-function(name="all"){
-  
-  
-  folder <- "./"
-  setwd("./")
-  
-  if(file.exists(paste0(name,"_",".Rda"))){
-    local({
-      load(paste0(name,"_",".Rda"))
-      return (paste0(name,"_"))
-    })
+function.getRawData <- function(name = "all",daterange="none",channel="all") {
+  if (file.exists(paste0("dipu.raw_data", ".Rda"))) {
+    load(paste0("dipu.raw_data", ".Rda"))
+    return(dipu.raw_data)
+    
+  } else{
+    file_list <-
+      list.files(pattern = "(SC)(.)*(.csv)$",
+                 recursive = TRUE,
+                 full.names = TRUE)
+    raw_data <-
+      do.call("rbind", lapply(file_list, function(x) {
+        message(x)
+        read_csv(x)
+      }))
+    dipu.raw_data <- raw_data
+    save(dipu.raw_data, file = paste0("dipu.raw_data", ".Rda"))
+    return(dipu.raw_data)
+    
   }
-  tmpname<-name
-  if(name=="all"){
-    tmpname<-""
-  }
-  
-  file_pattern=paste0(tmpname,"(.)*(.csv$)")
-  #file_list <- list.files(path=folder, pattern=file_pattern,recursive = TRUE,full.names = TRUE) # create list of all .csv files in folder
-  file_list <- list.files(path=folder, pattern=file_pattern,recursive = TRUE,full.names = TRUE)
-  # read in each .csv file in file_list and rbind them into a data frame called data1
-  raw_data <- 
-    do.call("rbind", 
-            lapply(file_list, 
-                   function(x){
-                     message(x)
-                     read_csv(x)
-                   } 
-                  )
-            )
-  
-  #data <- data[is.finite(rowSums(data)),]
-  save(raw_data,file=paste0(name,"_",".Rda"))
-  return(raw_data)
 }

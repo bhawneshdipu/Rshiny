@@ -3,33 +3,21 @@
 
 #====================Preprocesing===============================
 
-function.MyPreprocessing<-function(data1,channel,daterange) {
+function.MyPreprocessing<-function(data1) {
+  #browser()
   
-  fromdate<-as.Date(daterange[0])
-  todate<-as.Date(daterange[1])
   #chnge format of Date
   data1$Date_Time <- data1$Date
   data1$Date_Time <-do.call(paste, c(data1[c("Date_Time", "Time")], sep = ""))
   data1$Date_Time <- as.POSIXct(data1$Date_Time, format = "%d%m%y%H%M")
-  data1$Date_Time <- as.Date(data1$Date_Time, "%d%m%y%H%M")
+  #data1$Date_Time <- as.Date(data1$Date_Time, "%d%m%y%H%M")
   data1$Date <- as.POSIXct(data1$Date,format = "%d%m%y")
-  
-  
-  
-  #View(daterange)
-  fromdate <- format(as.Date(daterange[0]), "%d-%m-%Y %H:%M:%S")
-  todate <- format(as.Date(daterange[1]), "%d-%m-%Y %H:%M:%S")
-  data1<-data1[data1$Date_Time>=fromdate & data1$Date_Time<=todate,]
-  #data1<-date1[date1$Date_Time>=fromdate & date1$Date_Time<=todate,]
-  
+  data1$Date <- as.Date(data1$Date,format = "%d%m%y")
   
   data1 <- data1[, c(ncol(data1), 1:(ncol(data1) - 1))]
   
-  
-  
   #Add ":" in time
   data1$Time <- sub("(.{2})(.*)", "\\1:\\2", data1$Time)
-  
   
   #Necessarily Columns as.factor
   data1$CHANNEL <- as.numeric(data1$CHANNEL)
@@ -76,45 +64,78 @@ function.MyPreprocessing<-function(data1,channel,daterange) {
   #add column sum of cars in interval
   data1$SUM <- rowSums(data1[, 5:18])
   
-  #unfinished preparation I will explain what I need
   
+   
+  dipu.pre_data<<-data1
+  #browser()
+  data1
+  
+}
+
+function.MyFilter<-function(data1,filename,daterange,channel){
+  #browser()
+  # filter by FILENAME
+  if (filename == "all") {
+    data1<-data1
+  } else{
+    data1 <- data1 %>% filter(FILENAME == paste0(filename, "_MEJA"))
+  }
+  
+  #=====================DATE PREPROCESSING=============================
+  # data1$Date_Time <- data1$Date
+  # data1$Date_Time <- do.call(paste,c(data1[c("Date_Time","Time")],sep = ""))
+  # data1$Date_Time <- as.POSIXct(data1$Date_Time,format = "%d%m%y%H%M")
+  # data1$Date_Time <- as.Date(data1$Date_Time, "%d%m%y%H%M")
+  # data1$Date <- as.POSIXct(data1$Date,format = "%d%m%y")
+  # data1<-data1[,c(ncol(data1),1:(ncol(data1)-1))]
+  
+  #browser()
+  #View(daterange)
+  message(daterange)
+  tryCatch({
+    #filter by date
+    fromdate<-as.Date(daterange[1],"%Y-%m-%d")
+    todate<-as.Date(daterange[2],"%Y-%m-%d")
+    message(todate)
+    message(fromdate)
+    data1<-data1[data1$Date>=fromdate & data1$Date<=todate,]
+    
+  },error=function(cond){
+    message("Date Range is not defined til now:")
+  })
+  
+  #browser()
+  #filter by channel
+  if (channel == "all") {
+    data1<-data1
+  }else if(channel == "12"){
+    data1 <- data1  %>% filter(CHANNEL %in%  c("1","2"))
+  }else if(channel == "34"){
+    data1 <- data1 %>% filter(CHANNEL %in%  c("3","4"))
+  }else if(channel == "1"){
+    data1 <- data1 %>% filter(CHANNEL == "1")
+  }else if(channel == "2"){
+    data1 <- data1 %>% filter(CHANNEL=="2")
+  }else if(channel == "3"){
+    data1 <- data1 %>% filter(CHANNEL == "3")
+  }else if(channel == "4"){
+    data1 <- data1 %>% filter(CHANNEL == "4")
+  }else{
+    data1<-data1
+  }
+  #browser()
+  #unfinished preparation I will explain what I need
   splitH <- str_split_fixed(data1$HEADINGS, " ", 4)
   splitH <- as.data.frame(splitH)
-  splitH <- unique(splitH)
-  # View(splitH)
-  # View(data1)
-  # View(colnames(splitH))
-  # View(colnames(splitH)[2])
-  
-  #commented to get only channel data
-  
-  #data1$CHANNEL1 <- data1$CHANNEL
-  
-  data1<-data1[data1$CHANNEL==paste0(channel),]
-  
-  colnames(splitH) <- "CHANNEL1"
-  colnames(splitH)[2] <- "CHANNEL2"
-  colnames(splitH)[3] <- "CHANNEL3"
-  colnames(splitH)[4] <- "CHANNEL4"
-  #View(splitH)
-  splitH$rowNames <- row.names.data.frame(splitH)
-  #replace.if
-  # for (i in vector) {
-  #   data1$CHANNEL<-gsub("1", splitH[1,1], data1$CHANNEL)
-  #   data1$CHANNEL<-gsub("2", splitH[1,2], data1$CHANNEL)
-  #   data1$CHANNEL<-gsub("3", splitH[1,3], data1$CHANNEL)
-  #   data1$CHANNEL<-gsub("4", splitH[1,4], data1$CHANNEL)
-  # }
-  
-  
-  #data1$CHANNEL <-do.call(paste, c(data1[c("CHANNEL1", "CHANNEL")], sep = "_"))
-  
-  #data1$CHANNEL <-do.call(paste, c(data1[c(paste0("CHANNEL",channel), "CHANNEL")], sep = "_"))
-  #commented by dipu
-  #data1$CHANNEL <- do.call(paste,c(data1[c("CHANNEL1","CHANNEL")],sep = "_"))
+  #splitH <- unique(splitH)
+  data1$CHANNEL<-gsub("1", paste0("1_",splitH[1,1]), data1$CHANNEL)
+  data1$CHANNEL<-gsub("2", paste0("2_",splitH[2,1]), data1$CHANNEL)
+  data1$CHANNEL<-gsub("3", paste0("3_",splitH[3,1]), data1$CHANNEL)
+  data1$CHANNEL<-gsub("4", paste0("4_",splitH[4,1]), data1$CHANNEL)
   
   data1$CHANNEL = as.factor(data1$CHANNEL)
   data1$Time = as.factor(data1$Time)
-  
+  dipu.fil_data<<-data1
+  #browser()
   data1
 }

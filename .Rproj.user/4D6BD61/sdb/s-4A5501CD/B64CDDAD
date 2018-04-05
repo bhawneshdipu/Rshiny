@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "#1. GetMyData.R -> filename ==> data1\n#2. Preprocessing -> data,channel ==> data1\n#3. Aggregation ->data,channel,filename,aggregater ==> pac\nsource(\"Lib.R\")\nsource(\"GetMyData.R\")\nsource(\"Preprocessing.R\")\nsource(\"Aggregation.R\")\nsource(\"MyPlots.R\")\nsource(\"MyFunctions.R\")\n##browser()\nfile_list <- list.files( pattern=\"(SC)(.)*(.csv)$\",recursive = TRUE,full.names = TRUE)\nraw_data <-do.call(\"rbind\", lapply(file_list, function(x) {\n    message(x)\n    read_csv(x)\n  }))\n##browser()\ndipu.raw_data<-raw_data\n##browser()\nsave(dipu.raw_data,file=paste0(\"dipu.raw_data\",\".Rda\"))\ndipu.pre_data<-function.MyPreprocessing(dipu.raw_data)\n##browser()\ndipu.aggregate_data<-NULL",
+    "created" : 1522869094614.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "323353489",
+    "id" : "B64CDDAD",
+    "lastKnownWriteTime" : 1522947166,
+    "last_content_update" : 1522947166884,
+    "path" : "~/fiverr/Rshiny/global.R",
+    "project_path" : "global.R",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 7,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

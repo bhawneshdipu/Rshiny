@@ -89,7 +89,7 @@ function.MyBoxPlot2<-function(pac,x,y,color){
 function.MyAnomalyDetection<-function(pac,myX,myY,Myperiod,MylastOnly){
   #==================================Anomaly detection=======================================
   
-  View(c(myX,myY,Myperiod,MylastOnly,0))
+  #View(c(myX,myY,Myperiod,MylastOnly,0))
   #SUM_DATA <- pac[,c(1,12)]
   
   myX<-paste0(myX)
@@ -98,7 +98,7 @@ function.MyAnomalyDetection<-function(pac,myX,myY,Myperiod,MylastOnly){
   MylastOnly<-FALSE
   SUM_DATA <- pac[,c(grep(paste0(myX),colnames(pac)),grep(paste0(myY), colnames(pac)))]
   #View(SUM_DATA)
-  View(c(myX,myY,Myperiod,MylastOnly,1))
+  #View(c(myX,myY,Myperiod,MylastOnly,1))
   abc <- as.numeric(rownames(SUM_DATA))
   ggplot(pac, aes(x=myX, y=myY)) + geom_line()
   
@@ -106,7 +106,7 @@ function.MyAnomalyDetection<-function(pac,myX,myY,Myperiod,MylastOnly){
   #res = AnomalyDetectionTs(SUM_DATA, max_anoms=0.01, direction="pos", plot=TRUE, e_value = T)
   #res = AnomalyDetectionVec(SUM_DATA[,2], max_anoms=0.01, period=96, direction='both',
   #                          only_last=FALSE, plot=TRUE)
-  #View(SUM_DATA)
+  ##View(SUM_DATA)
   
   res = AnomalyDetectionVec(SUM_DATA[,2], max_anoms=0.01, period=Myperiod, direction='both',
                             only_last=MylastOnly, plot=TRUE)
@@ -117,9 +117,9 @@ function.MyAnomalyDetection<-function(pac,myX,myY,Myperiod,MylastOnly){
   SUM_DATA[[paste0(myX,"_row")]] <- abc
   
   #anomaly_table<-merge(SUM_DATA,anomaly_table,by.x = "Index_row",by.y = "index")
-  View(anomaly_table)
-  View(SUM_DATA)
-  View(c(dim(anomaly_table)))
+  #View(anomaly_table)
+  #View(SUM_DATA)
+  #View(c(dim(anomaly_table)))
   if(is.null(anomaly_table)){
     anomaly_table<-anomaly_table
   }else{
@@ -217,9 +217,9 @@ function.MyMachineLearning<-function(data1){
   #------------------------------------------
   
   # Run algorithms using 10-fold cross validation
-  control <- trainControl(method="cv", number=10)
-  metric = ifelse(is.factor(y), "Accuracy", "RMSE")
-  #metric <- "Accuracy"
+  control <- trainControl(method="cv", number=10,savePredictions = TRUE)
+  #mymetric = c("Accuracy","RMSE")
+  metric <- "Accuracy"
   validation_index <- createDataPartition(data1$CHANNEL, p=0.80, list=FALSE)
   # select 20% of the data for validation
   validation <- data1[-validation_index,]
@@ -229,23 +229,70 @@ function.MyMachineLearning<-function(data1){
   set.seed(7)
   #fit.lda <- train(SP10 ~ Date_Time,data=data1, method="lda", metric=metric, trControl=control)
   #fit.lda <- train(SP10 ~ Date_Time,data=data1, method="lda", metric=metric, trControl=control)
-  fit.lda<-lda(SP10 ~ Date_Time,data=data1,metric=metric, trControl=control)
+  # tryCatch({
+  #   fit.lda<-lda(SP10 ~ Date_Time,data=data1,metric=metric, trControl=control)  
+  # },error=function(cond){
+  #   message("Error in Accuracy: NOW None")
+  #   fit.lda<-lda(SP10 ~ Date_Time,data=data1, trControl=control)  
+  # })
+  
+  tryCatch({
+    fit.lda <- train(SP10 ~ Date_Time,data=data1, method="lda", metric=metric, trControl=control)
+  },error=function(cond){
+    message("Error in Accuracy: NOW None")
+    fit.lda <- train(SP10 ~ Date_Time,data=data1, method="lda", trControl=control)
+  })
+  
   
   # b) nonlinear algorithms
   # CART
   set.seed(7)
-  fit.cart <- train(SP10 ~ Date_Time,data=data1, method="rpart", metric=metric, trControl=control)
+  fit.cart<-NULL
+  tryCatch({
+    fit.cart <- train(SP10 ~ Date_Time,data=data1, method="rpart", metric=metric, trControl=control)
+  },error=function(cond){
+    message("Fit.Cart : Error in Accuracy : Metric : Now None")
+    fit.cart <- train(SP10 ~ Date_Time,data=data1, method="rpart", trControl=control)
+    
+  })
   # kNN
   set.seed(7)
-  fit.knn <- train(SP10 ~ Date_Time,data=data1, method="knn", metric=metric, trControl=control)
+  #fit.knn <- train(SP10 ~ Date_Time,data=data1, method="knn", metric=metric, trControl=control)
+  fit.knn<-NULL
+  tryCatch({
+    fit.knn <- train(SP10 ~ Date_Time,data=data1, method="knn", metric=metric, trControl=control)
+  },error=function(cond){
+    message("Fit.KNN : Error in RMSE : Now :None")
+    fit.knn <- train(SP10 ~ Date_Time,data=data1, method="knn",  trControl=control)
+    
+  })
   # c) advanced algorithms
   # SVM
   set.seed(7)
-  fit.svm <- train(SP10 ~ Date_Time,data=data1, method="svmRadial", metric=metric, trControl=control)
+  fit.svm<-NULL
+  #fit.svm <- train(SP10 ~ Date_Time,data=data1, method="svmRadial", metric=metric, trControl=control)
+  tryCatch({
+    fit.svm <- train(SP10 ~ Date_Time,data=data1, method="svmRadial", metric=metric, trControl=control)
+  },error=function(cond){
+    message("Fit.SVM : Error in Accuracy : Now RMSE")
+    fit.svm <- train(SP10 ~ Date_Time,data=data1, method="svmRadial", metric="RMSE", trControl=control)
+  },error=function(cond){
+    message("Fit.SVM : Error in RMSE : Now None")
+    fit.svm <- train(SP10 ~ Date_Time,data=data1, method="svmRadial",  trControl=control)
+  })
   # Random Forest
   set.seed(7)
-  fit.rf <- train(SP10 ~ Date_Time,data=data1, method="rf", metric=metric, trControl=control)
-  
+  #fit.rf <- train(SP10 ~ Date_Time,data=data1, method="rf", metric=metric, trControl=control)
+  fit.rf<-NULL
+  tryCatch({
+    fit.rf <- train(SP10 ~ Date_Time,data=data1, method="rf", metric=metric, trControl=control)
+  },error=function(cond){
+    message("Fit.RF : Error in Accuracy : Now RMSE")
+    fit.rf <- train(SP10 ~ Date_Time,data=data1, method="rf", metric="RMSE", trControl=control)
+  },error=function(cond){
+    message("Fit.RF : Error in RMSE : Now None")
+    fit.rf <- train(SP10 ~ Date_Time,data=data1, method="rf", trControl=control)
+  })
   
   #summarize accuracy of models
   results <- resamples(list(lda=fit.lda, cart=fit.cart, knn=fit.knn, svm=fit.svm, rf=fit.rf))
@@ -291,7 +338,10 @@ function.MyLinearRegression<-function(pac){
   
   tail(beer_sales_idx)
   
-  Sys.getenv("TZ")  
+  mytimezone<-Sys.getenv("TZ")
+  if(mytimezone==""){
+    mytimezone<-Sys.setenv(TZ="GMT")  
+  }
   # Make future index
   future_idx <- beer_sales_idx %>%
     tk_make_future_timeseries(n_future =10)
@@ -329,9 +379,10 @@ function.MyLinearRegression<-function(pac){
     # Actuals
     geom_line(aes(y = SUM),color = palette_light()[[3]], data = actuals_tbl) +
     geom_point(aes(y = SUM),color = palette_light()[[3]], data = actuals_tbl)+
-    theme_tq() +
+    #commented by dipu giving error margin on NULL
+    #theme_tq() +
     labs(title = "Time series sum data")
-  #return (ggplotly(p)) 
+  regplot<- (ggplotly(p)) 
   
   
   
@@ -377,7 +428,7 @@ function.MyLinearRegression<-function(pac){
   # If timetk_idx is present, can get original dates back 
   tk_tbl(beer_sales_ts, timetk_idx = TRUE, rename_index = "date")
   
-  return(list(p,error_tbl))
+  return(list(regplot,error_tbl))
   
 }
 
