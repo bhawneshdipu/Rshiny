@@ -86,7 +86,7 @@ sidebar <- dashboardSidebar(width = 325,
               ),
               menuItem("ARIMA", icon = icon("th"), tabName = "arima"),
               conditionalPanel("input.sidebarmenu === 'arima'",
-                               selectInput("arimaselectchannel", "Select Channel:",choices = list("All"="all","Direction(1,2)"="12","Direction(3,4)"="34","Channel 1" = 1, "Channel 2" = 2,"Channel 3" = 3,"Channel 4" = 4), selected = "SP11")
+                               selectInput("arimaselectchannel", "Select Channel:",choices = list("All"="all","Direction(1,2)"="12","Direction(3,4)"="34","Channel 1" = 1, "Channel 2" = 2,"Channel 3" = 3,"Channel 4" = 4,"SUM"="SUM"), selected = "SUM")
                                
               )
               
@@ -198,7 +198,15 @@ body <- dashboardBody(
             )
           ),fluidRow(
             column(12,
-                   dataTableOutput("table72")
+                   plotlyOutput("plot72", height = 300)
+            )
+          ),fluidRow(
+            column(12,
+                   plotlyOutput("plot73", height = 300)
+            )
+          ),fluidRow(
+            column(12,
+                   DT::dataTableOutput("table74")
             )
           )
   )

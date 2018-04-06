@@ -129,12 +129,12 @@ server <- function(input, output,session) {
   
   updateSelectInput(session,"arimaselectchannel","Select Track:",choices=choices,selected="SUM")
   
-  # 
-  # observeEvent(
-  #   input$arimaselectchannel,{
-  #     dipu.linearregression(input,output,session)
-  #   },ignoreInit = TRUE)
-  # 
+
+  observeEvent(
+    input$arimaselectchannel,{
+      dipu.arima(input,output,session)
+    },ignoreInit = FALSE)
+
   
   
   

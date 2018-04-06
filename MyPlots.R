@@ -376,8 +376,8 @@ function.MyMachineLearning <- function(pac, my_track, output) {
   beer_sales_tbl_aug %>% glimpse()
   
   beer_sales_tbl_clean <- beer_sales_tbl_aug %>%
-    select_if(~ !is.POSIXct(.)) %>%
-    select_if(~ !any(is.na(.))) %>%
+    select_if( ~ !is.POSIXct(.)) %>%
+    select_if( ~ !any(is.na(.))) %>%
     mutate_if(is.ordered, ~ as.character(.) %>% as.factor)
   
   beer_sales_tbl_clean %>% glimpse()
@@ -391,12 +391,12 @@ function.MyMachineLearning <- function(pac, my_track, output) {
   #beer_sales_tbl_clean$month.lbl <- NULL
   #beer_sales_tbl_clean$wday.lbl <- NULL
   split <- round(nrow(beer_sales_tbl_clean) * .70)
-  datat_to <- beer_sales_tbl_clean[1:split,]
+  datat_to <- beer_sales_tbl_clean[1:split, ]
   actuals_tbl <-
-    beer_sales_tbl_clean[(split + 1):nrow(beer_sales_tbl_clean),]
+    beer_sales_tbl_clean[(split + 1):nrow(beer_sales_tbl_clean), ]
   split2 <- round(nrow(actuals_tbl) * .66)
-  data_beet <- actuals_tbl[1:split2,]
-  data_end <- actuals_tbl[(split2 + 1):nrow(actuals_tbl),]
+  data_beet <- actuals_tbl[1:split2, ]
+  data_end <- actuals_tbl[(split2 + 1):nrow(actuals_tbl), ]
   
   
   
@@ -544,7 +544,7 @@ function.MyLinearRegression <- function(pac, my_track, output) {
   tryCatch({
     #SUM_DATA <- pac[, c(1, 31)]
     message(my_track)
-    if (is.null(my_track) || my_track == ""){
+    if (is.null(my_track) || my_track == "") {
       my_track = "SUM"
     }
     SUM_DATA <- pac[, c(1, grep(paste0(my_track), colnames(pac)))]
@@ -569,15 +569,16 @@ function.MyLinearRegression <- function(pac, my_track, output) {
     
     #beer_sales_tbl_aug %>% select(paste0("Index")) %>% unlist(use.names = FALSE)
     #fit_lm <-lm(SUM ~ ., data = select(beer_sales_tbl_aug, -c(Index, diff, month.lbl)))
-    lmx=as.formula(paste0(my_track," ~ ", paste(".", collapse="+")))
-    fit_lm <-lm(lmx, data = select(beer_sales_tbl_aug, -c(Index, diff, month.lbl)))
+    lmx = as.formula(paste0(my_track, " ~ ", paste(".", collapse = "+")))
+    fit_lm <-
+      lm(lmx, data = select(beer_sales_tbl_aug,-c(Index, diff, month.lbl)))
     tryCatch({
       summary(fit_lm)
       #na.omit(fit_lm)
       
-    },warning=function(cond){
+    }, warning = function(cond) {
       message(paste(cond))
-    },error=function(cond) {
+    }, error = function(cond) {
       message(paste(cond))
     })
     
@@ -600,7 +601,8 @@ function.MyLinearRegression <- function(pac, my_track, output) {
     tryCatch({
       # Make predictions
       
-      pred <-predict(fit_lm, newdata = select(new_data_tbl, -c(index, diff)))
+      pred <-
+        predict(fit_lm, newdata = select(new_data_tbl,-c(index, diff)))
       
     }, warning = function(cond) {
       message(paste(cond))
@@ -622,12 +624,13 @@ function.MyLinearRegression <- function(pac, my_track, output) {
     
     
     split <- round(nrow(SUM_DATA) * .90)
-    datat_to <- SUM_DATA[1:split,]
-    actuals_tbl <- SUM_DATA[(split + 1):nrow(SUM_DATA),]
+    datat_to <- SUM_DATA[1:split, ]
+    actuals_tbl <- SUM_DATA[(split + 1):nrow(SUM_DATA), ]
     #colnames(actuals_tbl)[2] <- "value"
     
     
-    p <- ggplot(SUM_DATA, aes_string(x = paste0("Index"), y = paste0(my_track))) +
+    p <-
+      ggplot(SUM_DATA, aes_string(x = paste0("Index"), y = paste0(my_track))) +
       # Training data
       geom_line(color = palette_light()[[1]]) +
       geom_point(color = palette_light()[[1]]) +
@@ -635,14 +638,18 @@ function.MyLinearRegression <- function(pac, my_track, output) {
       geom_line(aes(y = value), color = palette_light()[[4]], data = predictions_tbl) +
       geom_point(aes(y = value), color = palette_light()[[4]], data = predictions_tbl) +
       # Actuals
-      geom_line(aes_string(y = paste0(my_track)), color = palette_light()[[3]], data = actuals_tbl) +
-      geom_point(aes_string(y = paste0(my_track)), color = palette_light()[[3]], data = actuals_tbl) +
+      geom_line(aes_string(y = paste0(my_track)),
+                color = palette_light()[[3]],
+                data = actuals_tbl) +
+      geom_point(aes_string(y = paste0(my_track)),
+                 color = palette_light()[[3]],
+                 data = actuals_tbl) +
       #theme_tq() +
       labs(title = "Time series sum data")
     ggplotly(p)
     output$plot61 <- renderPlotly(ggplotly(p))
     
-    # 
+    #
     # error_tbl <- left_join(actuals_tbl, predictions_tbl) %>%
     #   rename_(actual = paste0(my_track), pred = paste0(value)) %>%
     #   mutate(error     = actual - pred,
@@ -716,5 +723,204 @@ function.MyLinearRegression <- function(pac, my_track, output) {
         tags$b("Exception in model building", paste0(cond), style = "color:red")
       ))
   })
+  
+}
+#====================================ARIMA + sweep: MAPE = 4.3% (sweep demo)==================================
+
+function.MyArima <- function(pac, my_track, output) {
+  #browser()
+  tryCatch({
+    if (is.null(my_track) || my_track == "") {
+      my_track = "SUM"
+    }
+    SUM_DATA <- pac[, c(1, grep(paste0(my_track), colnames(pac)))]
+    
+    #SUM_DATA <- pac[, c(1, 31)]
+    tryCatch({
+      p <- SUM_DATA %>%
+        ggplot(aes_string("Index", paste0(my_track))) +
+        geom_line(col = palette_light()[1]) +
+        geom_point(col = palette_light()[1]) +
+        geom_ma(ma_fun = SMA,
+                n = 12,
+                size = 1) +
+        theme_tq() +
+        labs(title = "Beer Sales: 2007 through 2016")
+      
+    }, error = function(cond) {
+      message("Exception ", paste(cond))
+    }, warning = function(cond) {
+      message("Exception ", paste(cond))
+    })
+    output$plot71 <- renderPlotly(ggplotly(p))
+    tryCatch({
+      beer_sales_ts <- tk_ts(SUM_DATA)
+      beer_sales_ts
+      has_timetk_idx(beer_sales_ts)
+      
+    }, error = function(cond) {
+      message("Exception ", paste(cond))
+    }, warning = function(cond) {
+      message("Exception ", paste(cond))
+    })
+    tryCatch({
+      fit_arima <- auto.arima(beer_sales_ts)
+      
+      fit_arima
+      
+    }, error = function(cond) {
+      message("Exception ", paste(cond))
+    }, warning = function(cond) {
+      message("Exception ", paste(cond))
+    })
+    
+    
+    # sw_tidy - Get model coefficients
+    sw_tidy(fit_arima)
+    # sw_glance - Get model description and training set accuracy measures
+    sw_glance(fit_arima) %>%
+      glimpse()
+    
+    # sw_augment - get model residuals
+    sw_augment(fit_arima, timetk_idx = TRUE)
+    
+    tryCatch({
+      p <- sw_augment(fit_arima, timetk_idx = TRUE) %>%
+        ggplot(aes(x = index, y = .resid)) +
+        geom_point() +
+        geom_hline(yintercept = 0, color = "red") +
+        labs(title = "Residual diagnostic") +
+        theme_tq()
+      
+      
+      }, error = function(cond) {
+      message("Exception ", paste(cond))
+    }, warning = function(cond) {
+      message("Exception ", paste(cond))
+    })
+    output$plot72 <- renderPlotly(ggplotly(p))
+    
+    #browser()
+    # Forecast next 12 months
+    fcast_arima <- forecast(fit_arima, h = 100)
+    class(fcast_arima)
+    
+    # Check if object has timetk index
+    has_timetk_idx(fcast_arima)
+    
+    # sw_sweep - tidies forecast output
+    fcast_tbl <- sw_sweep(fcast_arima, timetk_idx = TRUE)
+    
+    fcast_tbl
+    
+    
+    
+    tryCatch({
+      # Visualize the forecast with ggplot
+      p <- fcast_tbl %>%
+        ggplot(aes_string(x = "index", y = paste0(my_track), color = paste0("key"))) +
+        # 95% CI
+        geom_ribbon(
+          aes(ymin = lo.95, ymax = hi.95),
+          fill = "#D5DBFF",
+          color = NA,
+          size = 0
+        ) +
+        # 80% CI
+        geom_ribbon(
+          aes(
+            ymin = lo.80,
+            ymax = hi.80,
+            fill = key
+          ),
+          fill = "#596DD5",
+          color = NA,
+          size = 0,
+          alpha = 0.8
+        ) +
+        # Prediction
+        geom_line() +
+        geom_point() +
+        # Actuals
+        geom_line(aes_string(x = "Index", y = paste0(my_track)),
+                  color = palette_light()[[1]],
+                  data = actuals_tbl) +
+        geom_point(aes_string(x = "Index", y = paste0(my_track)),
+                   color = palette_light()[[1]],
+                   data = actuals_tbl) +
+        # Aesthetics
+        labs(
+          title = "Beer Sales Forecast: ARIMA",
+          x = "",
+          y = "Thousands of Tons",
+          subtitle = "sw_sweep tidies the auto.arima() forecast output"
+        ) +
+        scale_color_tq() +
+        scale_fill_tq() +
+        theme_tq()
+    }, error = function(cond) {
+      message("Exception ", paste(cond))
+    }, warning = function(cond) {
+      message("Exception ", paste(cond))
+    })
+    
+    #ggplotly(p)
+    output$plot73 <- renderPlotly(ggplotly(p))
+    
+    
+    
+    tryCatch({
+      # error_tbl <-
+      #   left_join(actuals_tbl, fcast_tbl, by = c("Index" = "index")) %>%
+      #   rename_(actual = SUM.x, pred = SUM.y) %>%
+      #   select(Index, actual, pred) %>%
+      #   mutate(error     = actual - pred,
+      #          error_pct = error / actual)
+      # error_tbl
+      error_tbl <-
+        left_join(actuals_tbl, fcast_tbl, by = c("Index" = "index")) %>%
+        rename_(actual = paste0(my_track,".","x")) %>%
+        select_("Index", "actual", "pred") %>%
+        mutate(error     = actual - pred,
+               error_pct = error / actual)
+      
+    }, error = function(cond) {
+      message("Exception ", paste(cond))
+    }, warning = function(cond) {
+      message("Exception ", paste(cond))
+    })
+    error_tbl
+    
+    output$table74 <- DT::renderDataTable(error_tbl)
+    
+    
+    na.omit(error_tbl)
+    
+    
+    # Calculate test error metrics
+    test_residuals <- error_tbl$error
+    test_error_pct <- error_tbl$error_pct * 100 # Percentage error
+    
+    me   <- mean(test_residuals, na.rm = TRUE)
+    rmse <- mean(test_residuals ^ 2, na.rm = TRUE) ^ 0.5
+    mae  <- mean(abs(test_residuals), na.rm = TRUE)
+    mape <- mean(abs(test_error_pct), na.rm = TRUE)
+    mpe  <- mean(test_error_pct, na.rm = TRUE)
+    
+    tibble(me, rmse, mae, mape, mpe) %>% glimpse()
+  }, error = function(cond) {
+    message(paste(cond))
+    output$errormsg70 <-
+      renderUI(tagList(
+        tags$b("Exception in model building", paste0(cond), style = "color:red")
+      ))
+  }, warning = function(cond) {
+    output$errormsg70 <-
+      renderUI(tagList(
+        tags$b("Exception in model building", paste0(cond), style = "color:red")
+      ))
+  })
+  
+  
   
 }

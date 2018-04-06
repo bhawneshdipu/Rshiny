@@ -70,17 +70,7 @@ dipu.machinelearning<-function(input,output,session){
   #data1<-function.MyPreprocessAndFilter(data1,input$selectfile,input$selectdaterange,input$selectchannel)
   #pac<-function.MyAggregation(dipu.fil_data,input$selectdataaggregation)
   
-  
-  # commented due to error 
-  # Warning: Error in resamples: object 'fit.lda' not found
-  # Stack trace (innermost first):
-  # 68: resamples
-  # 67: function.MyMachineLearning [MyPlots.R#309]
-  # 66: dipu.machinelearning [MyFunctions.R#58]
-  # 65: observeEventHandler [/home/dipu/fiverr/Rshiny/server.R#114]
-  # 1: runApp
-  
-  
+
   dataplot<-function.MyMachineLearning(dipu.pac_data,input$machinelearningselectchannel,output)
   #output$plot51<-renderPlotly(dataplot[0])
   #output$plot52<-renderPlotly(dataplot[1])
@@ -91,5 +81,12 @@ dipu.linearregression<-function(input,output,session){
   #data1<-function.getRawData()
   #data1<-function.MyPreprocessAndFilter(data1,input$selectfile,input$selectdaterange,input$selectchannel)
   dataplot<-function.MyLinearRegression(dipu.pac_data,input$linearregressionselectchannel,output)
+  
+}
+dipu.arima<-function(input,output,session){
+  #browser()
+  #data1<-function.getRawData()
+  #data1<-function.MyPreprocessAndFilter(data1,input$selectfile,input$selectdaterange,input$selectchannel)
+  dataplot<-function.MyArima(dipu.pac_data,input$arimaselectchannel,output)
   
 }

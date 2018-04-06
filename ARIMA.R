@@ -7,14 +7,14 @@
 
 
 SUM_DATA <- pac[,c(1,31)]
-SUM_DATA %>%
+p<-SUM_DATA %>%
   ggplot(aes(Index, SUM)) +
   geom_line(col = palette_light()[1]) +
   geom_point(col = palette_light()[1]) +
   geom_ma(ma_fun = SMA, n = 12, size = 1) +
-  theme_tq() +
+  theme_tq() %>%
   labs(title = "Beer Sales: 2007 through 2016")
-
+ggplotly(p)
 
 beer_sales_ts <- tk_ts(SUM_DATA)
 beer_sales_ts
@@ -31,13 +31,13 @@ sw_glance(fit_arima) %>%
 # sw_augment - get model residuals
 sw_augment(fit_arima, timetk_idx = TRUE)
 
-sw_augment(fit_arima, timetk_idx = TRUE) %>%
+p<-sw_augment(fit_arima, timetk_idx = TRUE) %>%
   ggplot(aes(x = index, y = .resid)) +
   geom_point() + 
   geom_hline(yintercept = 0, color = "red") + 
   labs(title = "Residual diagnostic") +
   theme_tq()
-
+ggplotly(p)
 # Forecast next 12 months
 fcast_arima <- forecast(fit_arima, h = 100)
 class(fcast_arima)
@@ -54,7 +54,7 @@ fcast_tbl
 
 
 # Visualize the forecast with ggplot
-fcast_tbl %>%
+p<-fcast_tbl %>%
   ggplot(aes(x = index, y = SUM, color = key)) +
   # 95% CI
   geom_ribbon(aes(ymin = lo.95, ymax = hi.95), 
@@ -77,9 +77,9 @@ fcast_tbl %>%
 
 
 
+ggplotly(p)
 
-
-rror_tbl <- left_join(actuals_tbl, fcast_tbl, by = c("Index" = "index"))%>% 
+error_tbl <- left_join(actuals_tbl, fcast_tbl, by = c("Index" = "index"))%>% 
   rename(actual = SUM.x, pred = SUM.y) %>%
   select(Index, actual, pred) %>%
   mutate(

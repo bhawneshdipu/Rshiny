@@ -312,7 +312,7 @@ fcast_tbl
 
 
 # Visualize the forecast with ggplot
-fcast_tbl %>%
+p<-fcast_tbl %>%
   ggplot(aes(x = index, y = SUM, color = key)) +
   # 95% CI
   geom_ribbon(aes(ymin = lo.95, ymax = hi.95), 
@@ -332,12 +332,12 @@ fcast_tbl %>%
   scale_color_tq() +
   scale_fill_tq() +
   theme_tq()
+ggplotly(p)
 
 
 
 
-
-rror_tbl <- left_join(actuals_tbl, fcast_tbl, by = c("Index" = "index"))%>% 
+error_tbl <- left_join(actuals_tbl, fcast_tbl, by = c("Index" = "index"))%>% 
   rename(actual = SUM.x, pred = SUM.y) %>%
   select(Index, actual, pred) %>%
   mutate(
