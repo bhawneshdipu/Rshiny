@@ -278,10 +278,17 @@ function.MyAnomalyDetection <-
 
 #==================================Motif discovery=======================================
 
-function.MyMotifDiscovery <- function(pac, myX, myY) {
+function.MyMotifDiscovery <- function(pac, myX, myY,output) {
   #mx <- as.numeric(unlist(pac[paste0(myX)]))
   #my <- as.numeric(unlist(pac[paste0(myY)]))
-  
+
+  if(is.null(myX) || myX==""){
+    myX="SP11"
+  }
+  if(is.null(myY) || myY==""){
+    myY="SP12"
+  }
+    browser()  
   tsvalx <-
     pac %>% select(paste0(myX)) %>% unlist(use.names = FALSE)
   tsvaly <-
@@ -289,25 +296,9 @@ function.MyMotifDiscovery <- function(pac, myX, myY) {
   
   typeof(tsvalx)
   
-  res.wcc <- Func.motif(
-    ts = tsvalx,
-    global.norm = T,
-    local.norm = F,
-    window.size = 24,
-    overlap = 0,
-    w = 6,
-    a = 5,
-    mask.size = 5,
-    max.dist.ratio = 1.2,
-    count.ratio.1 = 1.1,
-    count.ratio.2 = 1.1
-  )
-  
-  #res.wcc <- Func.motif(ts = pac$SP11, global.norm = T, local.norm = F, window.size = 24, overlap = 0, w = 6, a = 5, mask.size = 5, max.dist.ratio = 1.2, count.ratio.1 = 1.1, count.ratio.2 = 1.1)
-  #res.ahu <- Func.motif(ts = pac$SP12, global.norm = T, local.norm = F, window.size = 24, overlap = 0, w = 6, a = 5, mask.size = 5, max.dist.ratio = 1.2, count.ratio.1 = 1.1, count.ratio.2 = 1.1)
-  res.ahu <-
-    Func.motif(
-      ts = tsvaly,
+  tryCatch({
+    res.wcc <- Func.motif(
+      ts = pac[[paste0(myX)]],
       global.norm = T,
       local.norm = F,
       window.size = 24,
@@ -319,43 +310,152 @@ function.MyMotifDiscovery <- function(pac, myX, myY) {
       count.ratio.1 = 1.1,
       count.ratio.2 = 1.1
     )
+    
+  },warning=function(cond){
+    output$errormsg40 <-
+      renderUI(tagList(
+        tags$b("Exception in motif's discovery", paste0(cond), style = "color:red")
+      ))
+    
+  },error=function(cond){
+    output$errormsg40 <-
+      renderUI(tagList(
+        tags$b("Exception in motif's discovery ", paste0(cond), style = "color:red")
+      ))
+    
+  })
+  
+  #res.wcc <- Func.motif(ts = pac$SP11, global.norm = T, local.norm = F, window.size = 24, overlap = 0, w = 6, a = 5, mask.size = 5, max.dist.ratio = 1.2, count.ratio.1 = 1.1, count.ratio.2 = 1.1)
+  #res.ahu <- Func.motif(ts = pac$SP12, global.norm = T, local.norm = F, window.size = 24, overlap = 0, w = 6, a = 5, mask.size = 5, max.dist.ratio = 1.2, count.ratio.1 = 1.1, count.ratio.2 = 1.1)
+  tryCatch({
+    res.ahu <-
+      Func.motif(
+        ts =  pac[[paste0(myX)]],
+        global.norm = T,
+        local.norm = F,
+        window.size = 24,
+        overlap = 0,
+        w = 6,
+        a = 5,
+        mask.size = 5,
+        max.dist.ratio = 1.2,
+        count.ratio.1 = 1.1,
+        count.ratio.2 = 1.1
+      )
+    
+    
+  },warning=function(cond){
+    output$errormsg40 <-
+      renderUI(tagList(
+        tags$b("Exception in motif's discovery", paste0(cond), style = "color:red")
+      ))
+    
+  },error=function(cond){
+    output$errormsg40 <-
+      renderUI(tagList(
+        tags$b("Exception in motif's discovery ", paste0(cond), style = "color:red")
+      ))
+    
+  })
   
   
-  #Visualization
-  data.wcc <-
-    Func.visual.SingleMotif(
-      single.ts = tsvalx,
-      window.size = 24,
-      motif.indices = res.wcc$Indices
-    )
+  tryCatch({
+    #Visualization
+    data.wcc <-
+      Func.visual.SingleMotif(
+        single.ts =  pac[[paste0(myX)]],
+        window.size = 24,
+        motif.indices = res.wcc$Indices
+      )  
+    
+  },warning=function(cond){
+    output$errormsg40 <-
+      renderUI(tagList(
+        tags$b("Exception in motif's discovery", paste0(cond), style = "color:red")
+      ))
+    
+  },error=function(cond){
+    output$errormsg40 <-
+      renderUI(tagList(
+        tags$b("Exception in motif's discovery ", paste0(cond), style = "color:red")
+      ))
+    
+  })
+  
+  
+  tryCatch({
+    
   data.ahu <-
     Func.visual.SingleMotif(
-      single.ts = tsvaly,
+      single.ts =  pac[[paste0(myY)]],
       window.size = 24,
       motif.indices = res.ahu$Indices
     )
   
-  #Determine the total number of motifs discovered in the time series of WCC
-  n <- length(unique(data.wcc$data.1$Y))
-  #Make the plot
-  p <- ggplot(data = data.wcc$data.1) +
-    geom_line(aes(x = 1:dim(data.wcc$data.1)[1], y = X)) +
-    geom_point(aes(
-      x = 1:dim(data.wcc$data.1)[1],
-      y = X,
-      color = Y,
-      shape = Y
-    )) +
-    scale_shape_manual(values = seq(from = 1, to = n)) +
-    guides(shape = guide_legend(nrow = 2)) +
-    xlab("Time (15-min)") + ylab("Počet áut") +
-    theme(
-      panel.background = element_rect(fill = "white", colour = "black"),
-      legend.position = "top",
-      legend.title = element_blank()
-    )
+},warning=function(cond){
+  output$errormsg40 <-
+    renderUI(tagList(
+      tags$b("Exception in motif's discovery", paste0(cond), style = "color:red")
+    ))
   
-  ggplotly(p)
+},error=function(cond){
+  output$errormsg40 <-
+    renderUI(tagList(
+      tags$b("Exception in motif's discovery ", paste0(cond), style = "color:red")
+    ))
+  
+})
+  #Determine the total number of motifs discovered in the time series of WCC
+  tryCatch({
+    n <- length(unique(data.wcc$data.1$Y))
+    
+  },warning=function(cond){
+    output$errormsg40 <-
+      renderUI(tagList(
+        tags$b("Exception in motif's discovery", paste0(cond), style = "color:red")
+      ))
+    
+  },error=function(cond){
+    output$errormsg40 <-
+      renderUI(tagList(
+        tags$b("Exception in motif's discovery ", paste0(cond), style = "color:red")
+      ))
+    
+  })
+  #Make the plot
+  tryCatch({
+    p <- ggplot(data = data.wcc$data.1) +
+      geom_line(aes(x = 1:dim(data.wcc$data.1)[1], y = X)) +
+      geom_point(aes(
+        x = 1:dim(data.wcc$data.1)[1],
+        y = X,
+        color = Y,
+        shape = Y
+      )) +
+      scale_shape_manual(values = seq(from = 1, to = n)) +
+      guides(shape = guide_legend(nrow = 2)) +
+      xlab("Time (15-min)") + ylab("Počet áut") +
+      theme(
+        panel.background = element_rect(fill = "white", colour = "black"),
+        legend.position = "top",
+        legend.title = element_blank()
+      )
+    
+  },warning=function(cond){
+    output$errormsg40 <-
+      renderUI(tagList(
+        tags$b("Exception in motif's discovery", paste0(cond), style = "color:red")
+      ))
+    
+  },error=function(cond){
+    output$errormsg40 <-
+      renderUI(tagList(
+        tags$b("Exception in motif's discovery ", paste0(cond), style = "color:red")
+      ))
+    
+  })  
+  
+  output$plot41 <- renderPlotly(ggplotly(p))
 }
 
 #=========================MACHINE LEARNING========================

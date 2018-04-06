@@ -47,22 +47,8 @@ dipu.motifdiscovery<-function(input,output,session){
   #data1<-function.getRawData()
   #data1<-function.MyPreprocessAndFilter(data1,input$selectfile,input$selectdaterange,input$selectchannel)
   
-  
-# no non-missing arguments to max; returning -Inf
-# Warning: Error in {: task 1 failed - "subscript out of bounds"
-# Stack trace (innermost first):
-# 72: <Anonymous>
-# 71: stop
-# 70: e$fun
-# 69: %do%
-# 68: Func.motif
-# 67: function.MyMotifDiscovery [MyPlots.R#167]
-# 66: dipu.motifdiscovery [MyFunctions.R#51]
-# 65: observeEventHandler [/home/dipu/fiverr/Rshiny/server.R#105]
-# 1: runApp
-  
   #dipu.pac_data<<-function.MyAggregation(dipu.fil_data,input$selectdataaggregation)
-  #output$plot41<-function.MyMotifDiscovery(dipu.pac_data,input$selectmotifx,input$selectmotify)
+  output$plot41<-function.MyMotifDiscovery(dipu.pac_data,input$selectmotifx,input$selectmotify,output)
 }
 dipu.machinelearning<-function(input,output,session){
   #browser()
