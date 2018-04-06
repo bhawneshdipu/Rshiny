@@ -82,8 +82,7 @@ sidebar <- dashboardSidebar(width = 325,
               ),
               menuItem("Linear Regression", icon = icon("th"), tabName = "linearregression"),
               conditionalPanel("input.sidebarmenu === 'linearregression'",
-                               selectInput("linerregresionselectchannel", "Select Channel:",choices = list("All"="all","Direction(1,2)"="12","Direction(3,4)"="34","Channel 1" = 1, "Channel 2" = 2,"Channel 3" = 3,"Channel 4" = 4), selected = "SP11")
-                               
+                               selectInput("linearregressionselectchannel", "Select Channel:",choices = list("All"="all","Direction(1,2)"="12","Direction(3,4)"="34","Channel 1" = 1, "Channel 2" = 2,"Channel 3" = 3,"Channel 4" = 4,"SUM"="SUM"), selected = "SUM")     
               ),
               menuItem("ARIMA", icon = icon("th"), tabName = "arima"),
               conditionalPanel("input.sidebarmenu === 'arima'",
@@ -104,6 +103,10 @@ body <- dashboardBody(
             column(7,
                      img(src="sector.jpg", height = 250)
               )
+            ),fluidRow(
+              column(12,
+                     uiOutput("errormsg10")
+              )
             ),
             fluidRow(column(12,
                             plotlyOutput("plot11", height = 300)
@@ -111,6 +114,11 @@ body <- dashboardBody(
             )
     ),
     tabItem(tabName = "boxplot",
+            fluidRow(
+              column(12,
+                     uiOutput("errormsg20")
+              )
+            ),
             fluidRow(
               column(12,
                      plotlyOutput("plot21", height = 300)
@@ -125,12 +133,20 @@ body <- dashboardBody(
     tabItem(tabName = "anomalydetection",
             fluidRow(
               column(12,
+                     uiOutput("errormsg30")
+              )
+            ),            fluidRow(
+              column(12,
                      plotlyOutput("plot31", height = 300)
               )
             )
     ),
     tabItem(tabName = "motifdiscovery",
             fluidRow(
+              column(12,
+                     uiOutput("errormsg40")
+              )
+            ),fluidRow(
               column(12,
                      plotOutput("plot41", height = 300)
               )
@@ -152,23 +168,31 @@ body <- dashboardBody(
               )
             ),fluidRow(
               column(12,
-                     dataTableOutput("table53")
+                     DT::dataTableOutput("table53")
               )
             )
   ),
   tabItem(tabName = "linearregression",
           fluidRow(
             column(12,
+                   uiOutput("errormsg60")
+            )
+          ),fluidRow(
+            column(12,
                    plotlyOutput("plot61", height = 300)
             )
           ),fluidRow(
-                  column(12,
-                        dataTableOutput("table62")
-                    )
+            column(12,
+                   DT::dataTableOutput("table62")
+            )
           )
   ),
   tabItem(tabName = "arima",
           fluidRow(
+            column(12,
+                   uiOutput("errormsg70")
+            )
+          ),fluidRow(
             column(12,
                    plotlyOutput("plot71", height = 300)
             )

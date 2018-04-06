@@ -117,21 +117,24 @@ server <- function(input, output,session) {
 
   
   #====================================timetk + linear regression: MAPE = 4.3% (timetk demo)==================================
-  choices = setNames(colnames(dipu.pre_data),colnames(dipu.pre_data))
-  updateSelectInput(session,"linerregresionselectchannel","Select Track:",choices=choices,selected="SP11")
-  updateSelectInput(session,"arimaselectchannel","Select Track:",choices=choices,selected="SP11")
+  choices = setNames(colnames(dipu.pac_data),colnames(dipu.pac_data))
+  updateSelectInput(session,"linearregressionselectchannel","Select Track:",choices=choices,selected="SUM")
   
   observeEvent(
-    input$arimaselectchannel,{
-      dipu.linearregressionandarima(input,output,session)
-    },ignoreInit = TRUE)
-
-  observeEvent(
-    input$linerregresionselectchannel,{
-      dipu.linearregressionandarima(input,output,session)
-    },ignoreInit = TRUE)
+    input$linearregressionselectchannel,{
+      dipu.linearregression(input,output,session)
+    },ignoreInit = FALSE)
   
   
+  
+  updateSelectInput(session,"arimaselectchannel","Select Track:",choices=choices,selected="SUM")
+  
+  # 
+  # observeEvent(
+  #   input$arimaselectchannel,{
+  #     dipu.linearregression(input,output,session)
+  #   },ignoreInit = TRUE)
+  # 
   
   
   

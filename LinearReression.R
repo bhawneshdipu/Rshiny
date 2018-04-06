@@ -1,3 +1,33 @@
+## Lib.R ##
+library(DT)
+library(readr)
+library(plotly)
+library(stringr)
+library(DataLoader)
+library(forecast)
+library(tseries)
+library(zoo)
+library(xts)
+library(fts)
+library(MASS)
+library(caret)
+library(e1071)
+library(dplyr)
+library(h2o)        # Awesome ML Library
+library(timetk)     # Toolkit for working with time series in R
+library(tidyquant)
+library(anomalyDetection)
+library(TSMining)
+library(randomForest)
+#install.packages("devtools")
+#devtools::install_github("twitter/AnomalyDetection")
+library(AnomalyDetection)
+packageVersion('plotly')
+#devtools::install_github("tidyverse/ggplot2")
+#devtools::install_github('hadley/ggplot2')
+library(ggplot2)
+
+
 ## Linear Regression ##
 
 
@@ -69,7 +99,7 @@ p<-ggplot(SUM_DATA,aes(x=Index,y=SUM))+
   # Actuals
   geom_line(aes(y = SUM),color = palette_light()[[3]], data = actuals_tbl) +
   geom_point(aes(y = SUM),color = palette_light()[[3]], data = actuals_tbl)+
-  theme_tq() +
+  #theme_tq() +
   labs(title = "Time series sum data")
 ggplotly(p) 
 
