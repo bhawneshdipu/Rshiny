@@ -30,7 +30,9 @@ function.MyAggregation<- function(data1,aggregater) {
   pac <- tk_augment_timeseries_signature(pac)
   #source("Aggregation_Date.R")
   #source("Aggregation_Date_Time.R")
+  head(pac)
   dipu.pac_data<<-pac
+  dipu.pac_data<-pac
   pac
    
 }

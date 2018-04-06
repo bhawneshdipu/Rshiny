@@ -1,5 +1,5 @@
 ## MyPlots.R ##
-
+source("Lib.R")
 
 function.MyPlotSpeedBins<-function(pac){
   renderPlotly({
@@ -44,7 +44,7 @@ function.MyPlotLengthBins<-function(pac){
 function.MyPlotWeightBins<-function(pac){
   renderPlotly({
     #Plot of aggregation by WeigthBins
-    plot_ly(data1, x = ~Date, y = ~CS1 , name = 'Number of cars in time aggregated')%>%
+    plot_ly(pac, x = ~Date, y = ~CS1 , name = 'Number of cars in time aggregated')%>%
       add_trace(y = ~CS1, name = '0-2000 kg', mode = 'lines') %>%
       add_trace(y = ~CS2, name = '2000-3501 kg', mode = 'lines') %>%
       add_trace(y = ~CS3, name = '3501-7497 kg', mode = 'lines') %>%
@@ -85,17 +85,16 @@ function.MyBoxPlot2<-function(pac,x,y,color){
   })
   
 }
+#==================================Anomaly detection=======================================
 
 function.MyAnomalyDetection<-function(pac,myX,myY,Myperiod,MylastOnly){
-  #==================================Anomaly detection=======================================
-  
   #View(c(myX,myY,Myperiod,MylastOnly,0))
   #SUM_DATA <- pac[,c(1,12)]
   
-  myX<-paste0(myX)
-  myY<-paste0(myY)
-  Myperiod<-2
-  MylastOnly<-FALSE
+  # myX<-paste0(myX)
+  # myY<-paste0(myY)
+  # Myperiod<-2
+  # MylastOnly<-FALSE
   SUM_DATA <- pac[,c(grep(paste0(myX),colnames(pac)),grep(paste0(myY), colnames(pac)))]
   #View(SUM_DATA)
   #View(c(myX,myY,Myperiod,MylastOnly,1))
@@ -110,8 +109,8 @@ function.MyAnomalyDetection<-function(pac,myX,myY,Myperiod,MylastOnly){
   
   res = AnomalyDetectionVec(SUM_DATA[,2], max_anoms=0.01, period=Myperiod, direction='both',
                             only_last=MylastOnly, plot=TRUE)
-  anomaly_table=res$anoms
   
+  anomaly_table=res$anoms
   #SUM_DATA$Index_row <- abc
   
   SUM_DATA[[paste0(myX,"_row")]] <- abc
@@ -123,41 +122,50 @@ function.MyAnomalyDetection<-function(pac,myX,myY,Myperiod,MylastOnly){
   if(is.null(anomaly_table)){
     anomaly_table<-anomaly_table
   }else{
-    anomaly_table<-
       
-                    tryCatch({
-                                merge(SUM_DATA,anomaly_table,by.x = paste0(myX,"_row"),by.y = "index")
-                                
-                                },error=function(cond){
-                                  message("Error in anomaly_table")
-                                  anomaly_table
-                                  
-                                },warning=function(cond){
-                                  message("Warning in anomaly_table")
-                                  anomaly_table
-                                },finally={
-                                  message("Warning of anomaly_table")
-                              }
-                    )
+      tryCatch({
+        anomaly_table<-merge(SUM_DATA,anomaly_table,by.x = paste0(myX,"_row"),by.y = "index")
+        
+      },error=function(cond){
+        message("Error in anomaly_table")
+        anomaly_table
+        
+      },warning=function(cond){
+        message("Warning in anomaly_table")
+        anomaly_table
+      },finally={
+        message("Warning of anomaly_table")
+      }
+      )
   }
   
   renderPlotly({
-  plot_ly(SUM_DATA, x = ~get(myX), y = ~get(myY))%>%
-    add_trace(colors = "orange",name = "Po?etnos? ?ut v ?ase",mode = "lines")%>%
-    add_trace(y = ~anoms, colors = "gray",name = "Anom?lie", mode = "markers", alpha = 1,data = anomaly_table)%>%
-    layout(title = "Graf",
-           xaxis = list(title = "Čas",
-                        rangeslider = list(type = "date")),
-           yaxis = list(title = "Početnosť áut"))
+    plot_ly(SUM_DATA, x = ~get(myX), y = ~get(myY))%>%
+      add_trace(colors = "orange",name = "Po?etnos? ?ut v ?ase",mode = "lines")%>%
+      add_trace(y = ~anoms, colors = "gray",name = "Anom?lie", mode = "markers", alpha = 1,data = anomaly_table)%>%
+      layout(title = "Graf",
+             xaxis = list(title = "Čas",
+                          rangeslider = list(type = "date")),
+             yaxis = list(title = "Početnosť áut"))
   })
 }
 
 
+
+#==================================Motif discovery=======================================
+
 function.MyMotifDiscovery<-function(pac,myX,myY){
-  #==================================Motif discovery=======================================
+  
+  #mx <- as.numeric(unlist(pac[paste0(myX)]))
+  #my <- as.numeric(unlist(pac[paste0(myY)]))
+  
+  tsvalx <- pac %>% select(paste0(myX)) %>% unlist(use.names=FALSE)
+  tsvaly <- pac %>% select(paste0(myX)) %>% unlist(use.names=FALSE)
+  
+  typeof(tsvalx)
   
   res.wcc <- Func.motif(
-    ts = pac[paste0(myX)],
+    ts = tsvalx,
     global.norm = T,
     local.norm = F,
     window.size = 24,
@@ -168,16 +176,16 @@ function.MyMotifDiscovery<-function(pac,myX,myY){
     max.dist.ratio = 1.2,
     count.ratio.1 = 1.1,
     count.ratio.2 = 1.1
-    )
-  #res.wcc <- Func.motif(ts = pac$SP11, global.norm = T, local.norm = F, window.size = 24, overlap = 0, w = 6, a = 5, mask.size = 5, max.dist.ratio = 1.2, count.ratio.1 = 1.1, count.ratio.2 = 1.1)
+  )
   
+  #res.wcc <- Func.motif(ts = pac$SP11, global.norm = T, local.norm = F, window.size = 24, overlap = 0, w = 6, a = 5, mask.size = 5, max.dist.ratio = 1.2, count.ratio.1 = 1.1, count.ratio.2 = 1.1)
   #res.ahu <- Func.motif(ts = pac$SP12, global.norm = T, local.norm = F, window.size = 24, overlap = 0, w = 6, a = 5, mask.size = 5, max.dist.ratio = 1.2, count.ratio.1 = 1.1, count.ratio.2 = 1.1)
-  res.ahu <- Func.motif(ts = pac[paste0(myY)], global.norm = T, local.norm = F, window.size = 24, overlap = 0, w = 6, a = 5, mask.size = 5, max.dist.ratio = 1.2, count.ratio.1 = 1.1, count.ratio.2 = 1.1)
+  res.ahu <- Func.motif(ts = tsvaly, global.norm = T, local.norm = F, window.size = 24, overlap = 0, w = 6, a = 5, mask.size = 5, max.dist.ratio = 1.2, count.ratio.1 = 1.1, count.ratio.2 = 1.1)
   
   
   #Visualization
-  data.wcc <- Func.visual.SingleMotif(single.ts = pac[paste0(myY)], window.size = 24, motif.indices = res.wcc$Indices)
-  data.ahu <- Func.visual.SingleMotif(single.ts = pac[paste0(myY)], window.size = 24, motif.indices = res.ahu$Indices)
+  data.wcc <- Func.visual.SingleMotif(single.ts = tsvalx, window.size = 24, motif.indices = res.wcc$Indices)
+  data.ahu <- Func.visual.SingleMotif(single.ts = tsvaly, window.size = 24, motif.indices = res.ahu$Indices)
   
   #Determine the total number of motifs discovered in the time series of WCC
   n <- length(unique(data.wcc$data.1$Y))
@@ -197,122 +205,285 @@ function.MyMotifDiscovery<-function(pac,myX,myY){
 
 #=========================MACHINE LEARNING========================
 
-function.MyMachineLearning<-function(data1){
-
+function.MyMachineLearning<-function(pac,my_track,output){
+  #browser()
+  if(my_track==""){
+    my_track="SUM"
+  }
+  SUM_DATA <- pac[,c(1,grep(paste0(my_track), colnames(pac)))]
   
-  # Shuffle row indices: rows
-  rows <- sample(nrow(data1))
+  #SUM_DATA <- pac[,c(1,31)]
   
-  # Randomly order data: Sonar
-  data1 <- data1[rows,]
+  SUM_DATA %>% glimpse()
+  beer_sales_tbl_aug <- SUM_DATA %>%
+    tk_augment_timeseries_signature()
   
-  # Identify row to split on: split
-  split <- round(nrow(data1) * .60)
+  beer_sales_tbl_aug %>% glimpse()
   
-  # Create train
-  train <- data1[1:split,]
+  beer_sales_tbl_clean <- beer_sales_tbl_aug %>%
+    select_if(~ !is.POSIXct(.)) %>%
+    select_if(~ !any(is.na(.))) %>%
+    mutate_if(is.ordered, ~ as.character(.) %>% as.factor)
   
-  # Create test
-  test <- data1[(split + 1):nrow(data1),]
-  #------------------------------------------
+  beer_sales_tbl_clean %>% glimpse()
+  #browser()
+  beer_sales_tbl_clean[,1] <- as.integer(beer_sales_tbl_clean %>% select(paste0(my_track)) %>% unlist(use.names=FALSE))
   
-  # Run algorithms using 10-fold cross validation
-  control <- trainControl(method="cv", number=10,savePredictions = TRUE)
-  #mymetric = c("Accuracy","RMSE")
-  metric <- "Accuracy"
-  validation_index <- createDataPartition(data1$CHANNEL, p=0.80, list=FALSE)
-  # select 20% of the data for validation
-  validation <- data1[-validation_index,]
-  # use the remaining 80% of data to training and testing the models
-  dataset <- data1[validation_index,]
-  # a) linear algorithms
-  set.seed(7)
-  #fit.lda <- train(SP10 ~ Date_Time,data=data1, method="lda", metric=metric, trControl=control)
-  #fit.lda <- train(SP10 ~ Date_Time,data=data1, method="lda", metric=metric, trControl=control)
-  # tryCatch({
-  #   fit.lda<-lda(SP10 ~ Date_Time,data=data1,metric=metric, trControl=control)  
-  # },error=function(cond){
-  #   message("Error in Accuracy: NOW None")
-  #   fit.lda<-lda(SP10 ~ Date_Time,data=data1, trControl=control)  
-  # })
+  #beer_sales_tbl_clean[,1] <- as.integer(beer_sales_tbl_clean$SUM)
+  
+  #beer_sales_tbl_clean$month.lbl <- NULL
+  #beer_sales_tbl_clean$wday.lbl <- NULL
+  split <- round(nrow(beer_sales_tbl_clean) * .70)
+  datat_to <- beer_sales_tbl_clean[1:split,]
+  actuals_tbl <- beer_sales_tbl_clean[(split + 1):nrow(beer_sales_tbl_clean),]
+  split2 <- round(nrow(actuals_tbl) * .66)
+  data_beet <- actuals_tbl[1:split2,]
+  data_end <- actuals_tbl[(split2 + 1):nrow(actuals_tbl),]
+  
+  
+  
+  train_tbl <- datat_to
+  valid_tbl <- data_beet
+  test_tbl  <- data_end
+  
+  
+  #h2o.init()
+  #h2o.no_progress()
+  train_h2o <- as.h2o(train_tbl)
+  valid_h2o <- as.h2o(valid_tbl)
+  test_h2o  <- as.h2o(test_tbl)
+  
+  #y <- "SUM"
+  y<-paste0(my_track)
+  x <- setdiff(names(train_h2o), y)
   
   tryCatch({
-    fit.lda <- train(SP10 ~ Date_Time,data=data1, method="lda", metric=metric, trControl=control)
-  },error=function(cond){
-    message("Error in Accuracy: NOW None")
-    fit.lda <- train(SP10 ~ Date_Time,data=data1, method="lda", trControl=control)
-  })
-  
-  
-  # b) nonlinear algorithms
-  # CART
-  set.seed(7)
-  fit.cart<-NULL
-  tryCatch({
-    fit.cart <- train(SP10 ~ Date_Time,data=data1, method="rpart", metric=metric, trControl=control)
-  },error=function(cond){
-    message("Fit.Cart : Error in Accuracy : Metric : Now None")
-    fit.cart <- train(SP10 ~ Date_Time,data=data1, method="rpart", trControl=control)
+    # linear regression model used, but can use any model
+    automl_models_h2o <- h2o.automl(
+      x = x, 
+      y = y, 
+      training_frame = train_h2o, 
+      validation_frame = valid_h2o, 
+      leaderboard_frame = test_h2o, 
+      max_runtime_secs = 60, 
+      stopping_metric = "deviance")
     
-  })
-  # kNN
-  set.seed(7)
-  #fit.knn <- train(SP10 ~ Date_Time,data=data1, method="knn", metric=metric, trControl=control)
-  fit.knn<-NULL
-  tryCatch({
-    fit.knn <- train(SP10 ~ Date_Time,data=data1, method="knn", metric=metric, trControl=control)
-  },error=function(cond){
-    message("Fit.KNN : Error in RMSE : Now :None")
-    fit.knn <- train(SP10 ~ Date_Time,data=data1, method="knn",  trControl=control)
+    automl_leader <- automl_models_h2o@leader
     
-  })
-  # c) advanced algorithms
-  # SVM
-  set.seed(7)
-  fit.svm<-NULL
-  #fit.svm <- train(SP10 ~ Date_Time,data=data1, method="svmRadial", metric=metric, trControl=control)
-  tryCatch({
-    fit.svm <- train(SP10 ~ Date_Time,data=data1, method="svmRadial", metric=metric, trControl=control)
+    pred_h2o <- h2o.predict(automl_leader, newdata = test_h2o)
+    
+    h2o.performance(automl_leader, newdata = test_h2o)
+    
+    
+    
+    
+    error_tbl <- SUM_DATA %>% 
+      tail(SUM_DATA,n=sum(nrow(data_end)))%>% 
+      add_column(pred = pred_h2o %>% as.tibble() %>% pull(predict)) %>%
+      rename_(actual = paste0(my_track)) %>%
+      mutate(
+        error     = actual - pred,
+        error_pct = error / actual
+      ) 
+    output$table53<-DT::renderDataTable({error_tbl})
+    
+    
+    error_tbl %>%
+      summarise(
+        me   = mean(error),
+        rmse = mean(error^2)^0.5,
+        mae  = mean(abs(error)),
+        mape = mean(abs(error_pct)),
+        mpe  = mean(error_pct)
+      ) %>%
+      glimpse()
+    
+    
+    
+    
+    
+    
+    p<-SUM_DATA %>%
+      #ggplot(aes(x = Index, y = SUM)) +
+      ggplot(aes_string(x = paste0("Index"), y = paste0(my_track))) +
+      # Data - Spooky Orange
+      geom_point(size = 2, color = "gray", alpha = 0.5, shape = 21, fill = "orange") +
+      geom_line(color = "orange", size = 0.5) +
+      geom_ma(n = 1, color = "black")+ 
+      # Predictions - Spooky Purple
+      geom_point(aes(y = pred), size = 2, color = "gray", alpha = 1, shape = 21, fill = "purple", data = error_tbl) +
+      geom_line(aes(y = pred), color = "purple", size = 0.5, data = error_tbl) +
+      # Aesthetics
+      
+      labs(
+        title = "Graf",
+        subtitle = "Algotimus H2O mal najvyššiu prestnosť MAPE:9,6%"
+      )
+    output$plot51<-renderPlotly(ggplotly(p))
+    
+    output$plot52<-renderPlotly(
+      plot_ly(SUM_DATA, x = ~Index, y = ~get(my_track))%>%
+        add_trace(colors = "orange",name = "Početnosť áut v čase",mode = "lines")%>%
+        add_trace(y = ~pred, colors = "gray",name = "Predikované hodnoty", mode = "lines+markers", alpha = 1,data = error_tbl)%>%
+        layout(title = "Graf",
+               xaxis = list(title = "Čas",
+                            rangeslider = list(type = "date")),
+               yaxis = list(title = "Početnosť áut"))
+    )
+    
   },error=function(cond){
-    message("Fit.SVM : Error in Accuracy : Now RMSE")
-    fit.svm <- train(SP10 ~ Date_Time,data=data1, method="svmRadial", metric="RMSE", trControl=control)
-  },error=function(cond){
-    message("Fit.SVM : Error in RMSE : Now None")
-    fit.svm <- train(SP10 ~ Date_Time,data=data1, method="svmRadial",  trControl=control)
-  })
-  # Random Forest
-  set.seed(7)
-  #fit.rf <- train(SP10 ~ Date_Time,data=data1, method="rf", metric=metric, trControl=control)
-  fit.rf<-NULL
-  tryCatch({
-    fit.rf <- train(SP10 ~ Date_Time,data=data1, method="rf", metric=metric, trControl=control)
-  },error=function(cond){
-    message("Fit.RF : Error in Accuracy : Now RMSE")
-    fit.rf <- train(SP10 ~ Date_Time,data=data1, method="rf", metric="RMSE", trControl=control)
-  },error=function(cond){
-    message("Fit.RF : Error in RMSE : Now None")
-    fit.rf <- train(SP10 ~ Date_Time,data=data1, method="rf", trControl=control)
-  })
+    output$errormsg50<-renderUI(tagList(tags$b("Exception in model building",paste0(cond),style="color:red")))
   
-  #summarize accuracy of models
-  results <- resamples(list(lda=fit.lda, cart=fit.cart, knn=fit.knn, svm=fit.svm, rf=fit.rf))
-  summary(results)
-  p<-dotplot(results)
-  print(fit.lda)
-  return(list(p,fit.lda))
-  
-  # estimate skill of LDA on the validation dataset
-  #predictions <- predict(fit.lda, validation)
-  #confusionMatrix(predictions, validation$CHANNEL)
+    },warning=function(cond){
+      output$errormsg50<-renderUI(tagList(tags$b("Exception in model building",paste0(cond),style="color:red")))
+      
+  })
+    
+  #return(list(myggplot,myplotlyplot,my_error_table)) 
 }
 
 #====================================timetk + linear regression: MAPE = 4.3% (timetk demo)==================================
 
 
-function.MyLinearRegression<-function(pac){
+function.MyLinearRegressionAndArima<-function(pac,MyChannel,output){
+  #====================================timetk + h2o: MAPE = 3.9% (This demo)==================================
+  #beer_sales_tbl <- tq_get("S4248SM144NCEN", get = "economic.data", from = "2010-01-01", to = "2017-10-27")
+  
   
   SUM_DATA <- pac[,c(1,31)]
+  #browser()
+  #message(MyChannel)
   
+  #SUM_DATA <- pac[,c(1,grep(paste0(MyChannel), colnames(pac)))]
+  
+  SUM_DATA %>% glimpse()
+  beer_sales_tbl_aug <- SUM_DATA %>%
+    tk_augment_timeseries_signature()
+  
+  beer_sales_tbl_aug %>% glimpse()
+  
+  beer_sales_tbl_clean <- beer_sales_tbl_aug %>%
+    select_if(~ !is.POSIXct(.)) %>%
+    select_if(~ !any(is.na(.))) %>%
+    mutate_if(is.ordered, ~ as.character(.) %>% as.factor)
+  
+  beer_sales_tbl_clean %>% glimpse()
+  
+  #beer_sales_tbl_clean[,1] <- as.integer(beer_sales_tbl_clean %>% select(paste0(MyChannel)) %>% unlist(use.names=FALSE))
+  beer_sales_tbl_clean[,1] <- as.integer(beer_sales_tbl_clean$SUM)
+  
+  
+  #beer_sales_tbl_clean$month.lbl <- NULL
+  #beer_sales_tbl_clean$wday.lbl <- NULL
+  split <- round(nrow(beer_sales_tbl_clean) * .70)
+  datat_to <- beer_sales_tbl_clean[1:split,]
+  actuals_tbl <- beer_sales_tbl_clean[(split + 1):nrow(beer_sales_tbl_clean),]
+  split2 <- round(nrow(actuals_tbl) * .66)
+  data_beet <- actuals_tbl[1:split2,]
+  data_end <- actuals_tbl[(split2 + 1):nrow(actuals_tbl),]
+  
+  
+  
+  train_tbl <- datat_to
+  valid_tbl <- data_beet
+  test_tbl  <- data_end
+  
+  
+  train_h2o <- as.h2o(train_tbl)
+  valid_h2o <- as.h2o(valid_tbl)
+  test_h2o  <- as.h2o(test_tbl)
+  
+  #y <- MyChannel
+  y<- "SUM"
+  x <- setdiff(names(train_h2o), y)
+  
+  # linear regression model used, but can use any model
+  automl_models_h2o <- h2o.automl(
+    x = x, 
+    y = y, 
+    training_frame = train_h2o, 
+    validation_frame = valid_h2o, 
+    leaderboard_frame = test_h2o, 
+    max_runtime_secs = 60, 
+    stopping_metric = "deviance")
+  
+  automl_leader <- automl_models_h2o@leader
+  
+  pred_h2o <- h2o.predict(automl_leader, newdata = test_h2o)
+  
+  h2o.performance(automl_leader, newdata = test_h2o)
+  
+  
+  
+  
+  error_tbl <- SUM_DATA %>% 
+    tail(SUM_DATA,n=sum(nrow(data_end)))%>% 
+    add_column(pred = pred_h2o %>% as.tibble() %>% pull(predict)) %>%
+    rename(actual = SUM) %>%
+    mutate(
+      error     = actual - pred,
+      error_pct = error / actual
+    ) 
+  
+  
+  error_tbl
+  
+  #error table to output in linear reg table 62
+  
+output$table62<-DT::renderDataTable(error_tbl %>%
+    summarise(
+      me   = mean(error),
+      rmse = mean(error^2)^0.5,
+      mae  = mean(abs(error)),
+      mape = mean(abs(error_pct)),
+      mpe  = mean(error_pct)
+    ) %>%
+    glimpse()
+)
+  
+  
+  
+  
+  
+  p<-SUM_DATA %>%
+    ggplot(aes(x = Index, y = SUM)) +
+    # Data - Spooky Orange
+    geom_point(size = 2, color = "gray", alpha = 0.5, shape = 21, fill = "orange") +
+    geom_line(color = "orange", size = 0.5) +
+    geom_ma(n = 1, color = "black")+ 
+    # Predictions - Spooky Purple
+    geom_point(aes(y = pred), size = 2, color = "gray", alpha = 1, shape = 21, fill = "purple", data = error_tbl) +
+    geom_line(aes(y = pred), color = "purple", size = 0.5, data = error_tbl) +
+    # Aesthetics
+    
+    labs(
+      title = "Graf",
+      subtitle = "Algotimus H2O mal najvyššiu prestnosť MAPE:9,6%"
+    )
+  ggplotly(p)
+  
+ output$plot61<-renderPlotly({
+   plot_ly(SUM_DATA, x = ~Index, y = ~SUM)%>%
+     add_trace(colors = "orange",name = "Početnosť áut v čase",mode = "lines")%>%
+     add_trace(y = ~pred, colors = "gray",name = "Predikované hodnoty", mode = "lines+markers", alpha = 1,data = error_tbl)%>%
+     layout(title = "Graf",
+            xaxis = list(title = "Čas",
+                         rangeslider = list(type = "date")),
+            yaxis = list(title = "Početnosť áut"))
+   
+ }) 
+  
+  
+  
+  
+  
+  #====================================timetk + linear regression: MAPE = 4.3% (timetk demo)==================================
+  
+  
+ 
+  SUM_DATA <- pac[,c(1,31)]
+  #SUM_DATA <- pac[,c(1,grep(paste0(MyChannel), colnames(pac)))]
+ 
   SUM_DATA %>%
     tk_index() %>%
     tk_get_timeseries_summary() %>%
@@ -338,10 +509,7 @@ function.MyLinearRegression<-function(pac){
   
   tail(beer_sales_idx)
   
-  mytimezone<-Sys.getenv("TZ")
-  if(mytimezone==""){
-    mytimezone<-Sys.setenv(TZ="GMT")  
-  }
+  Sys.getenv("TZ")
   # Make future index
   future_idx <- beer_sales_idx %>%
     tk_make_future_timeseries(n_future =10)
@@ -360,8 +528,9 @@ function.MyLinearRegression<-function(pac){
     value = pred
   )
   
-  predictions_tbl
-  
+  output$table72<-DT::renderDataTable({
+    predictions_tbl
+  })
   
   split <- round(nrow(SUM_DATA) * .90)
   datat_to <- SUM_DATA[1:split,]
@@ -379,12 +548,9 @@ function.MyLinearRegression<-function(pac){
     # Actuals
     geom_line(aes(y = SUM),color = palette_light()[[3]], data = actuals_tbl) +
     geom_point(aes(y = SUM),color = palette_light()[[3]], data = actuals_tbl)+
-    #commented by dipu giving error margin on NULL
-    #theme_tq() +
+    theme_tq() +
     labs(title = "Time series sum data")
-  regplot<- (ggplotly(p)) 
-  
-  
+  ggplotly(p) 
   
   error_tbl <- left_join(actuals_tbl, predictions_tbl) %>%
     rename(actual = SUM, pred = value) %>%
@@ -393,6 +559,10 @@ function.MyLinearRegression<-function(pac){
       error_pct = error / actual
     ) 
   error_tbl
+  
+  output$table72<-DT::renderDataTable({
+    error_tbl
+  })
   
   # Calculating test error metrics
   test_residuals <- error_tbl$error
@@ -428,19 +598,16 @@ function.MyLinearRegression<-function(pac){
   # If timetk_idx is present, can get original dates back 
   tk_tbl(beer_sales_ts, timetk_idx = TRUE, rename_index = "date")
   
-  return(list(regplot,error_tbl))
   
-}
-
-#====================================ARIMA + sweep: MAPE = 4.3% (sweep demo)==================================
-
-
-function.MyArima<-function(pac){
+  #====================================ARIMA + sweep: MAPE = 4.3% (sweep demo)==================================
   
   
-  SUM_DATA <- pac[,c(1,31)]
-  SUM_DATA %>%
-    ggplot(aes(Index, SUM)) +
+  
+  #SUM_DATA <- pac[,c(1,31)]
+  SUM_DATA <- pac[,c(1,grep(paste0(MyChannel), colnames(pac)))]
+  
+   SUM_DATA %>%
+    ggplot(aes(Index, MyChannel)) +
     geom_line(col = palette_light()[1]) +
     geom_point(col = palette_light()[1]) +
     geom_ma(ma_fun = SMA, n = 12, size = 1) +
@@ -504,8 +671,8 @@ function.MyArima<-function(pac){
     labs(title = "Beer Sales Forecast: ARIMA", x = "", y = "Thousands of Tons",
          subtitle = "sw_sweep tidies the auto.arima() forecast output") +
     scale_color_tq() +
-    scale_fill_tq() +
-    theme_tq()
+    scale_fill_tq() #+
+    #theme_tq()
   
   
   
@@ -518,7 +685,11 @@ function.MyArima<-function(pac){
       error     = actual - pred,
       error_pct = error / actual
     ) 
+  output$table62<-DT::renderDataTable({
+    error_tbl
+  })
   error_tbl
+  
   na.omit(error_tbl)
   # Calculate test error metrics
   test_residuals <- error_tbl$error
@@ -532,5 +703,4 @@ function.MyArima<-function(pac){
   
   tibble(me, rmse, mae, mape, mpe) %>% glimpse()
   
-  
-}
+  }

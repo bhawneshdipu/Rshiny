@@ -1,5 +1,5 @@
 ## Lib.R ##
-
+library(DT)
 library(readr)
 library(plotly)
 library(stringr)

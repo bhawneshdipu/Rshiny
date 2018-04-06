@@ -99,7 +99,7 @@ function.MyFilter<-function(data1,filename,daterange,channel){
     message(todate)
     message(fromdate)
     data1<-data1[data1$Date>=fromdate & data1$Date<=todate,]
-    
+    head(data1)
   },error=function(cond){
     message("Date Range is not defined til now:")
   })
@@ -137,5 +137,6 @@ function.MyFilter<-function(data1,filename,daterange,channel){
   data1$Time = as.factor(data1$Time)
   dipu.fil_data<<-data1
   #browser()
+  head(data1)
   data1
 }

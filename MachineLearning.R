@@ -1,3 +1,36 @@
+## Lib.R ##
+
+library(DT)
+library(readr)
+library(plotly)
+library(stringr)
+library(DataLoader)
+library(forecast)
+library(tseries)
+library(zoo)
+library(xts)
+library(fts)
+library(MASS)
+library(caret)
+library(e1071)
+library(dplyr)
+library(h2o)        # Awesome ML Library
+library(timetk)     # Toolkit for working with time series in R
+library(tidyquant)
+library(anomalyDetection)
+library(TSMining)
+library(randomForest)
+#install.packages("devtools")
+#devtools::install_github("twitter/AnomalyDetection")
+library(AnomalyDetection)
+packageVersion('plotly')
+#devtools::install_github("tidyverse/ggplot2")
+#devtools::install_github('hadley/ggplot2')
+library(ggplot2)
+
+
+
+
 ## Machine Learning ##
 
 
@@ -41,7 +74,7 @@ test_tbl  <- data_end
 
 
 h2o.init()
-h2o.no_progress()
+#h2o.no_progress()
 train_h2o <- as.h2o(train_tbl)
 valid_h2o <- as.h2o(valid_tbl)
 test_h2o  <- as.h2o(test_tbl)

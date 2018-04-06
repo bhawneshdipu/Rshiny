@@ -415,7 +415,7 @@ pac$cnt_ma30 = ma(pac$SUM, order=30)
  # a) linear algorithms
  set.seed(7)
  #fit.lda <- train(SP10 ~ Date_Time,data=data1, method="lda", metric=metric, trControl=control)
- #fit.lda <- train(SP10 ~ Date_Time,data=data1, method="lda", metric=metric, trControl=control)
+ fit.lda <- train(SP10 ~ Date_Time,data=data1, method="lda", metric=metric, trControl=control)
  fit.lda<-lda(SP10 ~ Date_Time,data=data1,metric=metric, trControl=control)
  
  # b) nonlinear algorithms

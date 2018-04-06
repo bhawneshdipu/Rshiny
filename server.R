@@ -1,4 +1,5 @@
 source("global.R")
+source("MyFunctions.R")
 server <- function(input, output,session) {
   message("Server ")
   ##browser()
@@ -14,7 +15,7 @@ server <- function(input, output,session) {
       matrix <- matrix(data,nrow=5,ncol=1)
       colnames(matrix) <- c('Files')
       matrix
-    },striped = TRUE,hover = TRUE,bordered = TRUE,spacing = c("l"),width = "auto"
+    },striped = TRUE,hover = TRUE,bordered = TRUE,spreing = c("l"),width = "auto"
   )
   
   
@@ -45,7 +46,6 @@ server <- function(input, output,session) {
     },ignoreInit = TRUE)
   
   
-  ##======================= Box Plot ===============================##
   choices = setNames(colnames(dipu.pre_data),colnames(dipu.pre_data))
   updateSelectInput(session,"selectboxploty","Select Y:",choices=choices)
   updateSelectInput(session,"selectboxplotx","Select X:",choices=choices)
@@ -67,8 +67,8 @@ server <- function(input, output,session) {
   
   ##=============================== Anomaly Detection========================= ##
   choices = setNames(colnames(dipu.pre_data),colnames(dipu.pre_data))
-  updateSelectInput(session,"selectanomalyx","Select X:",choices=choices,selected="Index")
-  updateSelectInput(session,"selectanomalyy","Select Y:",choices=choices,selected="SP11")
+  updateSelectInput(session,"selectanomalyx","Select X:",choices=choices,selected="SP11")
+  updateSelectInput(session,"selectanomalyy","Select Y:",choices=choices,selected="SP12")
   
   observeEvent(
     input$selectlastonly,{
@@ -92,32 +92,43 @@ server <- function(input, output,session) {
   
   #==================================Motif discovery=======================================
   choices = setNames(colnames(dipu.pre_data),colnames(dipu.pre_data))
-  updateSelectInput(session,"selectmotifx","Select X:",choices=choices,selected="SP12")
-  updateSelectInput(session,"selectmotify","Select Y:",choices=choices,selected="SP11")
-  
+  updateSelectInput(session,"selectmotifx","Select X:",choices=choices,selected="SP11")
+  updateSelectInput(session,"selectmotify","Select Y:",choices=choices,selected="SP12")
+  # 
   observeEvent(
     input$selectmotifx,{
       dipu.motifdiscovery(input,output,session)
     },ignoreInit = TRUE)
-  
+
   observeEvent(
     input$selectmotify,{
       dipu.motifdiscovery(input,output,session)
     },ignoreInit = TRUE)
-  
+  # 
   #=========================MACHINE LEARNING========================
+  choices = setNames(colnames(dipu.pre_data),colnames(dipu.pre_data))
+  updateSelectInput(session,"machinelearningselectchannel","Select Track:",choices=choices,selected="SUM")
+  
   observeEvent(
-    input$machinelearningslider,{
+    input$machinelearningselectchannel,{
       dipu.machinelearning(input,output,session)
     },ignoreInit = TRUE)
-  
-  
+
+
   
   #====================================timetk + linear regression: MAPE = 4.3% (timetk demo)==================================
+  choices = setNames(colnames(dipu.pre_data),colnames(dipu.pre_data))
+  updateSelectInput(session,"linerregresionselectchannel","Select Track:",choices=choices,selected="SP11")
+  updateSelectInput(session,"arimaselectchannel","Select Track:",choices=choices,selected="SP11")
   
   observeEvent(
-    input$linearregressionslider,{
-      dipu.linearregression(input,output,session)
+    input$arimaselectchannel,{
+      dipu.linearregressionandarima(input,output,session)
+    },ignoreInit = TRUE)
+
+  observeEvent(
+    input$linerregresionselectchannel,{
+      dipu.linearregressionandarima(input,output,session)
     },ignoreInit = TRUE)
   
   
@@ -129,84 +140,81 @@ server <- function(input, output,session) {
   
   
   
-  
-  
-  
-  
-    # output$plot11 <- renderPlotly({
-    #   
-    #   
-    #   SUM_DATA <- pac[,c(1,31)]
-    #   
-    #   SUM_DATA %>%
-    #     tk_index() %>%
-    #     tk_get_timeseries_summary() %>%
-    #     glimpse()
-    #   
-    #   beer_sales_tbl_aug <- SUM_DATA %>%
-    #     tk_augment_timeseries_signature()
-    #   
-    #   beer_sales_tbl_aug
-    #   beer_sales_tbl_aug<-na.omit(beer_sales_tbl_aug)
-    #   
-    #   (l <- sapply(beer_sales_tbl_aug, function(x) is.factor(x)))
-    #   m <- beer_sales_tbl_aug[, l]
-    #   ifelse(n <- sapply(m, function(x) length(levels(x))) == 1, "DROP", "NODROP")
-    #   
-    #   fit_lm <- lm(SUM~ ., data = select(beer_sales_tbl_aug, -c(Index, diff,month.lbl)))
-    #   
-    #   summary(fit_lm)
-    #   #na.omit(fit_lm)
-    #   
-    #   beer_sales_idx <- SUM_DATA %>%
-    #     tk_index()
-    #   
-    #   tail(beer_sales_idx)
-    #   
-    #   # Make future index
-    #   future_idx <- beer_sales_idx %>%
-    #     tk_make_future_timeseries(n_future =10)
-    #   
-    #   future_idx
-    #   
-    #   new_data_tbl <- future_idx %>%
-    #     tk_get_timeseries_signature()
-    #   
-    #   new_data_tbl
-    #   
-    #   # Make predictions
-    #   pred <- predict(fit_lm, newdata = select(new_data_tbl, -c(index, diff)))
-    #   predictions_tbl <- tibble(
-    #     Index  = future_idx,
-    #     value = pred
-    #   )
-    #   
-    #   predictions_tbl
-    #   
-    #   
-    #   split <- round(nrow(SUM_DATA) * .90)
-    #   datat_to <- SUM_DATA[1:split,]
-    #   actuals_tbl <- SUM_DATA[(split + 1):nrow(SUM_DATA),]
-    #   #colnames(actuals_tbl)[2] <- "value"
-    #   
-    #   
-    #   p<-ggplot(SUM_DATA,aes(x=Index,y=SUM))+
-    #     # Training data
-    #     geom_line(color = palette_light()[[1]]) +
-    #     geom_point(color = palette_light()[[1]])+
-    #     # Predictions
-    #     geom_line(aes(y = value), color = palette_light()[[4]], data = predictions_tbl) +
-    #     geom_point(aes(y = value), color = palette_light()[[4]], data = predictions_tbl)+ 
-    #     # Actuals
-    #     geom_line(aes(y = SUM),color = palette_light()[[3]], data = actuals_tbl) +
-    #     geom_point(aes(y = SUM),color = palette_light()[[3]], data = actuals_tbl)+
-    #     theme_tq() +
-    #     labs(title = "Time series sum data")
-    #   ggplotly(p) 
-    #   
-    #   
-    # })
-    # 
+  # 
+  # output$plot11 <- renderPlotly({
+  # 
+  # 
+  #   SUM_DATA <- pre[,c(1,31)]
+  # 
+  #   SUM_DATA %>%
+  #     tk_index() %>%
+  #     tk_get_timeseries_summary() %>%
+  #     glimpse()
+  # 
+  #   beer_sales_tbl_aug <- SUM_DATA %>%
+  #     tk_augment_timeseries_signature()
+  # 
+  #   beer_sales_tbl_aug
+  #   beer_sales_tbl_aug<-na.omit(beer_sales_tbl_aug)
+  # 
+  #   (l <- sapply(beer_sales_tbl_aug, function(x) is.factor(x)))
+  #   m <- beer_sales_tbl_aug[, l]
+  #   ifelse(n <- sapply(m, function(x) length(levels(x))) == 1, "DROP", "NODROP")
+  # 
+  #   fit_lm <- lm(SUM~ ., data = select(beer_sales_tbl_aug, -c(Index, diff,month.lbl)))
+  # 
+  #   summary(fit_lm)
+  #   #na.omit(fit_lm)
+  # 
+  #   beer_sales_idx <- SUM_DATA %>%
+  #     tk_index()
+  # 
+  #   tail(beer_sales_idx)
+  # 
+  #   # Make future index
+  #   future_idx <- beer_sales_idx %>%
+  #     tk_make_future_timeseries(n_future =10)
+  # 
+  #   future_idx
+  # 
+  #   new_data_tbl <- future_idx %>%
+  #     tk_get_timeseries_signature()
+  # 
+  #   new_data_tbl
+  # 
+  #   # Make predictions
+  #   pred <- predict(fit_lm, newdata = select(new_data_tbl, -c(index, diff)))
+  #   predictions_tbl <- tibble(
+  #     Index  = future_idx,
+  #     value = pred
+  #   )
+  # 
+  #   predictions_tbl
+  # 
+  # 
+  #   split <- round(nrow(SUM_DATA) * .90)
+  #   datat_to <- SUM_DATA[1:split,]
+  #   actuals_tbl <- SUM_DATA[(split + 1):nrow(SUM_DATA),]
+  #   #colnames(actuals_tbl)[2] <- "value"
+  # 
+  # 
+  #   p<-ggplot(SUM_DATA,aes(x=Index,y=SUM))+
+  #     # Training data
+  #     geom_line(color = palette_light()[[1]]) +
+  #     geom_point(color = palette_light()[[1]])+
+  #     # Predictions
+  #     geom_line(aes(y = value), color = palette_light()[[4]], data = predictions_tbl) +
+  #     geom_point(aes(y = value), color = palette_light()[[4]], data = predictions_tbl)+
+  #     # Actuals
+  #     geom_line(aes(y = SUM),color = palette_light()[[3]], data = actuals_tbl) +
+  #     geom_point(aes(y = SUM),color = palette_light()[[3]], data = actuals_tbl)+
+  #     theme_tq() +
+  #     labs(title = "Time series sum data")
+  #   ggplotly(p)
+  # 
+  # 
+  # })
+  # 
   # output$plot1 <- renderPlotly({
   #   img <- plot_ly(SUM_DATA, x = ~Index, y = ~SUM)%>%
   #     add_trace(colors = "orange",name = "Početnosť áut v čase",mode = "lines")%>%
@@ -216,11 +224,11 @@ server <- function(input, output,session) {
   #                         rangeslider = list(type = "date")),
   #            yaxis = list(title = "Početnosť áut"))
   #   (img)
-  #   
+  # 
   # })
   # output$plot2 <- renderPlotly({
   #   #pie plot by day of week
-  #   plot_ly(pac, labels = ~wday.lbl, values = ~SP10, type = 'pie',textposition = 'inside')%>%
+  #   plot_ly(pre, labels = ~wday.lbl, values = ~SP10, type = 'pie',textposition = 'inside')%>%
   #     layout(title = 'Kol??ov? graf')
   # })
   # 
@@ -232,7 +240,7 @@ server <- function(input, output,session) {
   # })
   # output$plot21 <- renderPlotly({
   #   #Plot of aggregation by SpeedBins
-  #   plot_ly(pac, x = ~Index, y = ~SP1 , name = 'Number of cars in time aggregated')%>%
+  #   plot_ly(pre, x = ~Index, y = ~SP1 , name = 'Number of cars in time aggregated')%>%
   #     add_trace(y = ~SP1, name = '0-50km/h', mode = 'lines') %>%
   #     add_trace(y = ~SP2, name = '50-60km/h', mode = 'lines') %>%
   #     add_trace(y = ~SP3, name = '60-70km/h', mode = 'lines') %>%
@@ -248,11 +256,11 @@ server <- function(input, output,session) {
   #     add_trace(y = ~SP13, name = '160-180km/h', mode = 'lines')%>%
   #     add_trace(y = ~SP14, name = '180-999km/h', mode = 'lines')%>%
   #     add_trace(y = ~SUM, name = 'TOTAL', mode = 'lines')
-  #   
+  # 
   # })
   # output$plot22 <- renderPlotly({
   #   #Plot of aggregation by LengthBins
-  #   plot_ly(pac, x = ~Index, y = ~LN1 , name = 'Number of cars in time aggregated')%>%
+  #   plot_ly(pre, x = ~Index, y = ~LN1 , name = 'Number of cars in time aggregated')%>%
   #     add_trace(y = ~LN1, name = '0-300 cm', mode = 'lines') %>%
   #     #add_trace(y = ~LN2, name = '300-470 cm', mode = 'lines') %>%
   #     add_trace(y = ~LN3, name = '470-550 cm', mode = 'lines') %>%
@@ -261,85 +269,85 @@ server <- function(input, output,session) {
   #     add_trace(y = ~LN6, name = '1300-1800 cm', mode = 'lines') %>%
   #     add_trace(y = ~LN7, name = '1800-2550 cm', mode = 'lines') %>%
   #     add_trace(y = ~LN8, name = '2550-3600 cm', mode = 'lines') %>%
-  #     add_trace(y = ~LN9, name = '3600-9999 cm', mode = 'lines') 
-  #   
+  #     add_trace(y = ~LN9, name = '3600-9999 cm', mode = 'lines')
+  # 
   # })
   # output$plot31 <- renderPlotly({
-  #   
-  #   
-  #   SUM_DATA <- pac[,c(1,31)]
-  #   
+  # 
+  # 
+  #   SUM_DATA <- pre[,c(1,31)]
+  # 
   #   SUM_DATA %>%
   #     tk_index() %>%
   #     tk_get_timeseries_summary() %>%
   #     glimpse()
-  #   
+  # 
   #   beer_sales_tbl_aug <- SUM_DATA %>%
   #     tk_augment_timeseries_signature()
-  #   
+  # 
   #   beer_sales_tbl_aug
   #   beer_sales_tbl_aug<-na.omit(beer_sales_tbl_aug)
-  #   
+  # 
   #   (l <- sapply(beer_sales_tbl_aug, function(x) is.factor(x)))
   #   m <- beer_sales_tbl_aug[, l]
   #   ifelse(n <- sapply(m, function(x) length(levels(x))) == 1, "DROP", "NODROP")
-  #   
+  # 
   #   fit_lm <- lm(SUM~ ., data = select(beer_sales_tbl_aug, -c(Index, diff,month.lbl)))
-  #   
+  # 
   #   summary(fit_lm)
   #   #na.omit(fit_lm)
-  #   
+  # 
   #   beer_sales_idx <- SUM_DATA %>%
   #     tk_index()
-  #   
+  # 
   #   tail(beer_sales_idx)
-  #   
+  # 
   #   # Make future index
   #   future_idx <- beer_sales_idx %>%
   #     tk_make_future_timeseries(n_future =10)
-  #   
+  # 
   #   future_idx
-  #   
+  # 
   #   new_data_tbl <- future_idx %>%
   #     tk_get_timeseries_signature()
-  #   
+  # 
   #   new_data_tbl
-  #   
+  # 
   #   # Make predictions
   #   pred <- predict(fit_lm, newdata = select(new_data_tbl, -c(index, diff)))
   #   predictions_tbl <- tibble(
   #     Index  = future_idx,
   #     value = pred
   #   )
-  #   
+  # 
   #   predictions_tbl
-  #   
-  #   
+  # 
+  # 
   #   split <- round(nrow(SUM_DATA) * .90)
   #   datat_to <- SUM_DATA[1:split,]
   #   actuals_tbl <- SUM_DATA[(split + 1):nrow(SUM_DATA),]
   #   #colnames(actuals_tbl)[2] <- "value"
-  #   
-  #   
+  # 
+  # 
   #   p<-ggplot(SUM_DATA,aes(x=Index,y=SUM))+
   #     # Training data
   #     geom_line(color = palette_light()[[1]]) +
   #     geom_point(color = palette_light()[[1]])+
   #     # Predictions
   #     geom_line(aes(y = value), color = palette_light()[[4]], data = predictions_tbl) +
-  #     geom_point(aes(y = value), color = palette_light()[[4]], data = predictions_tbl)+ 
+  #     geom_point(aes(y = value), color = palette_light()[[4]], data = predictions_tbl)+
   #     # Actuals
   #     geom_line(aes(y = SUM),color = palette_light()[[3]], data = actuals_tbl) +
   #     geom_point(aes(y = SUM),color = palette_light()[[3]], data = actuals_tbl)+
   #     theme_tq() +
   #     labs(title = "Time series sum data")
-  #   ggplotly(p) 
-  #   
-  #   
+  #   ggplotly(p)
+  # 
+  # 
   # })
   # output$plot32 <- renderPlotly({
   #   #Bar plot day of week
-  #   plot_ly(pac, x = ~wday.lbl, y = ~SP1, type = 'bar', name = "0-50km/h") %>%
+  #   plot_ly(pre, x = ~wday.lbl, y = ~SP1, type = 'bar', name = "0-50km/h") %>%
   #     add_trace(y = ~SP2, name = '50-60km/h', mode = 'lines') %>%
   #     add_trace(y = ~SP3, name = '60-70km/h', mode = 'lines') %>%
   #     add_trace(y = ~SP4, name = '70-80km/h', mode = 'lines') %>%
@@ -355,8 +363,8 @@ server <- function(input, output,session) {
   #     add_trace(y = ~SP14, name = '180-999km/h', mode = 'lines')%>%
   #     #add_trace(y = ~SUM, name = 'TOTAL', mode = 'lines')%>%
   #     layout(title = "Počty áuto podľa dni v týždni",yaxis = list(title = 'Count'), barmode = 'group')
-  #   
-  #   
+  # 
+  # 
   # })
    
 }

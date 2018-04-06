@@ -45,7 +45,7 @@ sidebar <- dashboardSidebar(width = 325,
                 dateRangeInput("selectdaterange", "Date Range:",start="01-01-2016",format = "dd-mm-yyyy"),
                 selectInput("selectchannel", "Select Channel:",choices = list("All"="all","Direction(1,2)"="12","Direction(3,4)"="34","Channel 1" = 1, "Channel 2" = 2,"Channel 3" = 3,"Channel 4" = 4), selected = 1),
                 selectInput("selectdataset", "Select Dataset:",choices = list("Speed" = "speed", "Length" = "length","Weight" = "weight"), selected = 1),
-                selectInput("selectdataaggregation", "Data Aggregation:",choices = list("Minutes" = "minutes", "Hour" = "hours","Day" = "days","Week" = "weeks","Months" = "months","Quarter" = "quarter","Year" = "year"), selected = 1)
+                selectInput("selectdataaggregation", "Data Aggregation:",choices = list("Minutes" = "minute", "Hour" = "hours","Day" = "days","Week" = "weeks","Months" = "months","Quarter" = "quarter","Year" = "year"), selected = 1)
                 
               ),
               menuItem("Box Plot", icon = icon("th"), tabName = "boxplot" ),
@@ -77,15 +77,18 @@ sidebar <- dashboardSidebar(width = 325,
               ),
               menuItem("Machine Learning", icon = icon("th"), tabName = "machinelearning"),
               conditionalPanel("input.sidebarmenu === 'machinelearning'",
-                               sliderInput("machinelearningslider", "Scientific", 1, 100, 50)
+                               selectInput("machinelearningselectchannel", "Select Channel:",choices = list("All"="all","Direction(1,2)"="12","Direction(3,4)"="34","Channel 1" = 1, "Channel 2" = 2,"Channel 3" = 3,"Channel 4" = 4), selected = 1)
+                               
               ),
               menuItem("Linear Regression", icon = icon("th"), tabName = "linearregression"),
               conditionalPanel("input.sidebarmenu === 'linearregression'",
-                               sliderInput("linearregressionslider", "Scientific", 1, 100, 50)
+                               selectInput("linerregresionselectchannel", "Select Channel:",choices = list("All"="all","Direction(1,2)"="12","Direction(3,4)"="34","Channel 1" = 1, "Channel 2" = 2,"Channel 3" = 3,"Channel 4" = 4), selected = "SP11")
+                               
               ),
               menuItem("ARIMA", icon = icon("th"), tabName = "arima"),
               conditionalPanel("input.sidebarmenu === 'arima'",
-                               sliderInput("arimaslider", "Scientific", 1, 100, 50)
+                               selectInput("arimaselectchannel", "Select Channel:",choices = list("All"="all","Direction(1,2)"="12","Direction(3,4)"="34","Channel 1" = 1, "Channel 2" = 2,"Channel 3" = 3,"Channel 4" = 4), selected = "SP11")
+                               
               )
               
               
@@ -136,11 +139,20 @@ body <- dashboardBody(
     tabItem(tabName = "machinelearning",
             fluidRow(
               column(12,
+                     uiOutput("errormsg50")
+              )
+            ),
+            fluidRow(
+              column(12,
                      plotlyOutput("plot51", height = 300)
               )
             ),fluidRow(
               column(12,
-                     dataTableOutput("table52")
+                     plotlyOutput("plot52", height = 300)
+              )
+            ),fluidRow(
+              column(12,
+                     dataTableOutput("table53")
               )
             )
   ),
