@@ -1,0 +1,12 @@
+FILES DETAILS:
+
+ui.R ==> for the UI Design of App
+server.R ==> For the server functions and action events
+global.R ==> global file for all global data and raw data.
+MyPlots.R ==> all the  individual tabs plot functions
+MyFunctions.R ==> all the tabs function on event change.
+Lib.R ==> library files
+
+www/script.js ==> javascript for the responsive design and tabs design
+www/style.css ==> css for the responsive design 
+
