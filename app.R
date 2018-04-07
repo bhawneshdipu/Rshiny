@@ -6,4 +6,4 @@ h2o.no_progress()
 
 
 shinyApp(ui, server)
-runApp(port = 8888)
+

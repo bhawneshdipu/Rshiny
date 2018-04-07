@@ -57,7 +57,7 @@ dipu.machinelearning<-function(input,output,session){
   #pac<-function.MyAggregation(dipu.fil_data,input$selectdataaggregation)
   
 
-  dataplot<-function.MyMachineLearning(dipu.pac_data,input$machinelearningselectchannel,output)
+  #dataplot<-function.MyMachineLearning(dipu.pac_data,input$machinelearningselectchannel,output)
   #output$plot51<-renderPlotly(dataplot[0])
   #output$plot52<-renderPlotly(dataplot[1])
   #output$table53<-DT::renderDataTable({dataplot[2]})

@@ -288,7 +288,7 @@ function.MyMotifDiscovery <- function(pac, myX, myY,output) {
   if(is.null(myY) || myY==""){
     myY="SP12"
   }
-    browser()  
+    #browser()  
   tsvalx <-
     pac %>% select(paste0(myX)) %>% unlist(use.names = FALSE)
   tsvaly <-
@@ -635,18 +635,17 @@ function.MyMachineLearning <- function(pac, my_track, output) {
   #return(list(myggplot,myplotlyplot,my_error_table))
 }
 
-#====================================timetk + linear regression: MAPE = 4.3% (timetk demo)==================================
-
 ## Linear Regression ##
 #====================================timetk + linear regression: MAPE = 4.3% (timetk demo)==================================
 function.MyLinearRegression <- function(pac, my_track, output) {
-  #browser()
+  browser()
   tryCatch({
     #SUM_DATA <- pac[, c(1, 31)]
-    message(my_track)
-    if (is.null(my_track) || my_track == "") {
+    
+    if (exists("my_track")==FALSE || is.null(my_track) || my_track == "") {
       my_track = "SUM"
     }
+    message(my_track)
     SUM_DATA <- pac[, c(1, grep(paste0(my_track), colnames(pac)))]
     
     SUM_DATA %>%
@@ -700,12 +699,8 @@ function.MyLinearRegression <- function(pac, my_track, output) {
     
     tryCatch({
       # Make predictions
+      pred <-predict(fit_lm, newdata = select(new_data_tbl,-c(index, diff)))
       
-      pred <-
-        predict(fit_lm, newdata = select(new_data_tbl,-c(index, diff)))
-      
-    }, warning = function(cond) {
-      message(paste(cond))
     }, error = function(cond) {
       message(paste(cond))
     })
@@ -714,8 +709,6 @@ function.MyLinearRegression <- function(pac, my_track, output) {
       predictions_tbl <- tibble(Index  = future_idx,
                                 value = pred)
       
-    }, warning = function(cond) {
-      message(paste(cond))
     }, error = function(cond) {
       message(paste(cond))
     })
@@ -744,7 +737,7 @@ function.MyLinearRegression <- function(pac, my_track, output) {
       geom_point(aes_string(y = paste0(my_track)),
                  color = palette_light()[[3]],
                  data = actuals_tbl) +
-      #theme_tq() +
+      ##theme_tq() +
       labs(title = "Time series sum data")
     ggplotly(p)
     output$plot61 <- renderPlotly(ggplotly(p))
@@ -784,9 +777,11 @@ function.MyLinearRegression <- function(pac, my_track, output) {
     tryCatch({
       # Coerce to xts
       beer_sales_xts <- tk_xts(SUM_DATA)
-    }, warning = function(cond) {
+      
+    }, error = function(cond) {
       message(paste(cond))
     })
+    
     
     # Show the first six rows of the xts object
     beer_sales_xts %>%
@@ -797,7 +792,8 @@ function.MyLinearRegression <- function(pac, my_track, output) {
       # Coerce to ts
       beer_sales_ts <- tk_ts(SUM_DATA)
       
-    }, warning = function(cond) {
+      
+    }, error = function(cond) {
       message(paste(cond))
     })
     
@@ -817,62 +813,47 @@ function.MyLinearRegression <- function(pac, my_track, output) {
       renderUI(tagList(
         tags$b("Exception in model building", paste0(cond), style = "color:red")
       ))
-  }, warning = function(cond) {
-    output$errormsg60 <-
-      renderUI(tagList(
-        tags$b("Exception in model building", paste0(cond), style = "color:red")
-      ))
   })
   
 }
 #====================================ARIMA + sweep: MAPE = 4.3% (sweep demo)==================================
 
 function.MyArima <- function(pac, my_track, output) {
-  #browser()
+  browser()
   tryCatch({
-    if (is.null(my_track) || my_track == "") {
+    if (exists("my_track")==FALSE || is.null(my_track) || my_track == "") {
       my_track = "SUM"
     }
     SUM_DATA <- pac[, c(1, grep(paste0(my_track), colnames(pac)))]
     
     #SUM_DATA <- pac[, c(1, 31)]
     tryCatch({
-      p <- SUM_DATA %>%
+        p1 <- SUM_DATA %>%
         ggplot(aes_string("Index", paste0(my_track))) +
         geom_line(col = palette_light()[1]) +
         geom_point(col = palette_light()[1]) +
         geom_ma(ma_fun = SMA,
                 n = 12,
                 size = 1) +
-        theme_tq() +
-        labs(title = "Beer Sales: 2007 through 2016")
+        #theme_tq() +
+        labs(fill = "Beer Sales: 2007 through 2016")
       
-    }, error = function(cond) {
-      message("Exception ", paste(cond))
-    }, warning = function(cond) {
-      message("Exception ", paste(cond))
+    },error=function(cond){
+      message("Error: Arima:",paste(cond))
     })
-    output$plot71 <- renderPlotly(ggplotly(p))
+    exists("p1")
+    output$plot71 <- renderPlotly(ggplotly(p1))
     tryCatch({
       beer_sales_ts <- tk_ts(SUM_DATA)
-      beer_sales_ts
-      has_timetk_idx(beer_sales_ts)
       
-    }, error = function(cond) {
-      message("Exception ", paste(cond))
-    }, warning = function(cond) {
-      message("Exception ", paste(cond))
     })
+    beer_sales_ts
+    has_timetk_idx(beer_sales_ts)
+    
     tryCatch({
       fit_arima <- auto.arima(beer_sales_ts)
-      
-      fit_arima
-      
-    }, error = function(cond) {
-      message("Exception ", paste(cond))
-    }, warning = function(cond) {
-      message("Exception ", paste(cond))
     })
+    exists("fit_arima")
     
     
     # sw_tidy - Get model coefficients
@@ -885,20 +866,16 @@ function.MyArima <- function(pac, my_track, output) {
     sw_augment(fit_arima, timetk_idx = TRUE)
     
     tryCatch({
-      p <- sw_augment(fit_arima, timetk_idx = TRUE) %>%
+      p2 <- sw_augment(fit_arima, timetk_idx = TRUE) %>%
         ggplot(aes(x = index, y = .resid)) +
         geom_point() +
         geom_hline(yintercept = 0, color = "red") +
-        labs(title = "Residual diagnostic") +
-        theme_tq()
-      
-      
-      }, error = function(cond) {
-      message("Exception ", paste(cond))
-    }, warning = function(cond) {
-      message("Exception ", paste(cond))
-    })
-    output$plot72 <- renderPlotly(ggplotly(p))
+        ##theme_tq()
+        labs(title = "Residual diagnostic") 
+        
+      })
+    exists("p2")
+    output$plot72 <- renderPlotly(ggplotly(p2))
     
     #browser()
     # Forecast next 12 months
@@ -913,11 +890,14 @@ function.MyArima <- function(pac, my_track, output) {
     
     fcast_tbl
     
+    split <- round(nrow(SUM_DATA) * .90)
+    datat_to <- SUM_DATA[1:split, ]
+    actuals_tbl <- SUM_DATA[(split + 1):nrow(SUM_DATA), ]
     
     
     tryCatch({
       # Visualize the forecast with ggplot
-      p <- fcast_tbl %>%
+      p3 <- fcast_tbl %>%
         ggplot(aes_string(x = "index", y = paste0(my_track), color = paste0("key"))) +
         # 95% CI
         geom_ribbon(
@@ -956,16 +936,13 @@ function.MyArima <- function(pac, my_track, output) {
           subtitle = "sw_sweep tidies the auto.arima() forecast output"
         ) +
         scale_color_tq() +
-        scale_fill_tq() +
-        theme_tq()
-    }, error = function(cond) {
-      message("Exception ", paste(cond))
-    }, warning = function(cond) {
-      message("Exception ", paste(cond))
+        #theme_tq()+
+        scale_fill_tq() 
+        
     })
-    
-    #ggplotly(p)
-    output$plot73 <- renderPlotly(ggplotly(p))
+    exists("p3")
+    #ggplotly(p3)
+    output$plot73 <- renderPlotly(ggplotly(p3))
     
     
     
@@ -977,16 +954,15 @@ function.MyArima <- function(pac, my_track, output) {
       #   mutate(error     = actual - pred,
       #          error_pct = error / actual)
       # error_tbl
+    
       error_tbl <-
         left_join(actuals_tbl, fcast_tbl, by = c("Index" = "index")) %>%
-        rename_(actual = paste0(my_track,".","x")) %>%
+        rename_(actual = paste0(my_track,".","x"),pred=paste0(my_track,".","y")) %>%
         select_("Index", "actual", "pred") %>%
         mutate(error     = actual - pred,
                error_pct = error / actual)
       
     }, error = function(cond) {
-      message("Exception ", paste(cond))
-    }, warning = function(cond) {
       message("Exception ", paste(cond))
     })
     error_tbl
@@ -1010,11 +986,6 @@ function.MyArima <- function(pac, my_track, output) {
     tibble(me, rmse, mae, mape, mpe) %>% glimpse()
   }, error = function(cond) {
     message(paste(cond))
-    output$errormsg70 <-
-      renderUI(tagList(
-        tags$b("Exception in model building", paste0(cond), style = "color:red")
-      ))
-  }, warning = function(cond) {
     output$errormsg70 <-
       renderUI(tagList(
         tags$b("Exception in model building", paste0(cond), style = "color:red")

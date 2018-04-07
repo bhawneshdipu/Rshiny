@@ -2,14 +2,14 @@
     "debugBreakpointsState" : {
         "breakpoints" : [
             {
-                "editor_line_number" : 55,
+                "editor_line_number" : 49,
                 "editor_state" : 1,
                 "function_name" : "toplevel",
                 "function_steps" : "",
                 "id" : 9,
                 "is_package_breakpoint" : false,
                 "is_pending_debug_completion" : false,
-                "line_number" : 55,
+                "line_number" : 49,
                 "needs_updated_steps" : true,
                 "package_name" : "",
                 "path" : "~/fiverr/Rshiny/global.R",
@@ -17,14 +17,14 @@
                 "type" : 1
             },
             {
-                "editor_line_number" : 58,
+                "editor_line_number" : 59,
                 "editor_state" : 1,
                 "function_name" : "toplevel",
                 "function_steps" : "",
                 "id" : 10,
                 "is_package_breakpoint" : false,
                 "is_pending_debug_completion" : false,
-                "line_number" : 58,
+                "line_number" : 59,
                 "needs_updated_steps" : true,
                 "package_name" : "",
                 "path" : "~/fiverr/Rshiny/global.R",
@@ -32,14 +32,14 @@
                 "type" : 1
             },
             {
-                "editor_line_number" : 127,
+                "editor_line_number" : 128,
                 "editor_state" : 1,
                 "function_name" : "toplevel",
                 "function_steps" : "",
                 "id" : 11,
                 "is_package_breakpoint" : false,
                 "is_pending_debug_completion" : false,
-                "line_number" : 127,
+                "line_number" : 128,
                 "needs_updated_steps" : true,
                 "package_name" : "",
                 "path" : "~/fiverr/Rshiny/global.R",

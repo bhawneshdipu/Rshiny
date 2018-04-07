@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "## MyFunctions ##\n\nsource(\"MyPlots.R\")\ndipu.dashboard<-function(input,output,session,data1){\n  #print(input$selectfile)\n  # data1<-function.getRawData()\n  # data1<-function.MyPreprocessing(data1)\n  #browser()\n  dipu.fil_data<<-function.MyFilter(dipu.pre_data,input$selectfile,input$selectdaterange,input$selectchannel)\n  dipu.pac_data<<-function.MyAggregation(dipu.fil_data,input$selectdataaggregation)\n  #View(dipu.fil_data)\n  #View(dipu.pac_data)\n  #View(dipu.fil_data)\n  pac<-dipu.pac_data\n  \n  if(input$selectdataset==\"speed\"){\n    output$plot11 <- function.MyPlotSpeedBins(pac)\n    \n  }else if(input$selectdataset==\"length\"){\n    output$plot11 <- function.MyPlotLengthBins(pac)\n    \n  }else {\n    output$plot11 <- function.MyPlotWeightBins(dipu.fil_data)\n  }\n}\ndipu.boxplot<-function(input,output,session){\n  #browser()\n  #data1<-function.getRawData()\n  #data1<-function.MyPreprocessAndFilter(data1,input$selectfile,input$selectdaterange,input$selectchannel)\n  pac<-function.MyAggregation(dipu.fil_data,input$selectdataaggregation)\n  \n  output$plot21 <- function.MyBoxPlot1(pac)\n  output$plot22 <- function.MyBoxPlot2(pac,input$selectboxplotx,input$selectboxploty,input$selectcolor)\n  \n}\ndipu.anomalydetection<-function(input,output,session){\n  #browser()\n  #data1<-function.getRawData()\n  #data1<-function.MyPreprocessAndFilter(data1,input$selectfile,input$selectdaterange,input$selectchannel)\n  \n  dipu.pac_data<<-function.MyAggregation(dipu.fil_data,input$selectdataaggregation)\n  output$plot31<-function.MyAnomalyDetection(dipu.pac_data,input$selectanomalyx,input$selectanomalyy,input$selectperiod,input$selectlastonly)\n}\n\ndipu.motifdiscovery<-function(input,output,session){\n  #browser()\n  #data1<-function.getRawData()\n  #data1<-function.MyPreprocessAndFilter(data1,input$selectfile,input$selectdaterange,input$selectchannel)\n  \n  #dipu.pac_data<<-function.MyAggregation(dipu.fil_data,input$selectdataaggregation)\n  output$plot41<-function.MyMotifDiscovery(dipu.pac_data,input$selectmotifx,input$selectmotify,output)\n}\ndipu.machinelearning<-function(input,output,session){\n  #browser()\n  #data1<-function.getRawData()\n  #data1<-function.MyPreprocessAndFilter(data1,input$selectfile,input$selectdaterange,input$selectchannel)\n  #pac<-function.MyAggregation(dipu.fil_data,input$selectdataaggregation)\n  \n\n  #dataplot<-function.MyMachineLearning(dipu.pac_data,input$machinelearningselectchannel,output)\n  #output$plot51<-renderPlotly(dataplot[0])\n  #output$plot52<-renderPlotly(dataplot[1])\n  #output$table53<-DT::renderDataTable({dataplot[2]})\n}\ndipu.linearregression<-function(input,output,session){\n  #browser()\n  #data1<-function.getRawData()\n  #data1<-function.MyPreprocessAndFilter(data1,input$selectfile,input$selectdaterange,input$selectchannel)\n  dataplot<-function.MyLinearRegression(dipu.pac_data,input$linearregressionselectchannel,output)\n  \n}\ndipu.arima<-function(input,output,session){\n  #browser()\n  #data1<-function.getRawData()\n  #data1<-function.MyPreprocessAndFilter(data1,input$selectfile,input$selectdaterange,input$selectchannel)\n  dataplot<-function.MyArima(dipu.pac_data,input$arimaselectchannel,output)\n  \n}\n",
+    "created" : 1522690944628.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "555712481",
+    "id" : "F2E46456",
+    "lastKnownWriteTime" : 1523085109,
+    "last_content_update" : 1523085109907,
+    "path" : "~/fiverr/Rshiny/MyFunctions.R",
+    "project_path" : "MyFunctions.R",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 4,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
