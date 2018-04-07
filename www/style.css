@@ -3,3 +3,24 @@
       display:none;
     }
 }
+.main-sidebar {
+    color: #FFF;
+    white-space: nowrap;
+    overflow-y:scroll;
+    position:fixed;
+    height:85%;
+}
+body { 
+    background-color: white;
+}
+div[id^='plot']{
+    background-color: white;
+}
+.contain,.content-wrapper{
+    background-color: white;
+  
+}
+h2{
+  text-align:center;
+  font-weight:800;
+}

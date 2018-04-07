@@ -29,13 +29,20 @@ in plot you dont have all legend only 12 bins,can you add SUbmit button to confi
 	   	Color is good but be careful that all colors are factors objects. 
 		plot_ly(pac,y = ~SUM, color = ~month.lbl,year, am.pm estc..,type = "box")%>%
    		layout(boxmode = "group")
+
+
 Anomaly detection - X axis allways will be "Date" (Index or Date_Time column)object no any other 
 		    and Y axis will be SP1-SP14,LN1-LN9,CS1-CS6,SUM not any other pls.
+
+
 Bar plot - can you add one moore tab "BarPlot" same condition as at boxplot pls :)
+
+
 MotifDiscovery - I want to choose only between  SP1-SP14,LN1-LN9,CS1-CS6,SUM no any others columns.
 		This tab doesnt work for me
 		 Exception in motif's discovery Error in ggplot(data = data.wcc$data.1): object 'data.wcc' not found
 		no applicable method for 'ggplotly' applied to an object of class "function"
+
 Machine Learning H20 -  I want to choose only between  SP1-SP14,LN1-LN9,CS1-CS6,SUM no any others columns.
 		firs plot is useless can you delete it? Can you add slidebar max_runtime_secs- max 10 min, selected 60sec
 		   can you add summarize of error table ? under plot and up to error table	
@@ -48,8 +55,11 @@ Machine Learning H20 -  I want to choose only between  SP1-SP14,LN1-LN9,CS1-CS6,
    	 mpe  = mean(error_pct)
 		 ) %>%
  	 glimpse()
+
 Linear Regresion -  I want to choose only between  SP1-SP14,LN1-LN9,CS1-CS6,SUM no any others columns.	
 		also can you add summarize of error table ? under plot and up to error table
+
+
 ARIMA - I want to choose only between  SP1-SP14,LN1-LN9,CS1-CS6,SUM no any others columns.	
 		also can you add summarize of error table ? under plot and up to error table
 	Can you delete first two plots

@@ -123,7 +123,7 @@ function.MyPlotWeightBins <- function(pac) {
   })
 }
 
-function.MyBoxPlot1 <- function(pac) {
+function.MyBoxPlotspeed <- function(pac) {
   renderPlotly({
     #boxplot
     plot_ly(pac,
@@ -173,13 +173,79 @@ function.MyBoxPlot1 <- function(pac) {
   })
   
 }
+function.MyBoxPlotlength <- function(pac) {
+  renderPlotly({
+    #boxplot length bins 0 300 470 550 600 1300 1800 2550 3600 9999
+    plot_ly(pac,
+            y = ~ LN1,
+            name = '0-300',
+            type = 'box') %>%
+      add_trace(y = ~ LN2,
+                name = '300-470',
+                mode = 'lines') %>%
+      add_trace(y = ~ LN3,
+                name = '470-550',
+                mode = 'lines') %>%
+      add_trace(y = ~ LN4,
+                name = '550-600',
+                mode = 'lines') %>%
+      add_trace(y = ~ LN5,
+                name = '600-1300',
+                mode = 'lines') %>%
+      add_trace(y = ~ LN6,
+                name = '1300-1800',
+                mode = 'lines') %>%
+      add_trace(y = ~ LN7,
+                name = '1800-2550',
+                mode = 'lines') %>%
+      add_trace(y = ~ LN8,
+                name = '2550-3600',
+                mode = 'lines') %>%
+      add_trace(y = ~ LN9,
+                name = '3600-9999',
+                mode = 'lines') %>%
+      layout(title = "Boxplot by day of week")
+  })
+  
+}
+function.MyBoxPlotweight <- function(pac) {
+  renderPlotly({
+    #boxplot length bins 0 300 470 550 600 1300 1800 2550 3600 9999
+    plot_ly(pac,
+            y = ~ CS1,
+            name = 'CS1',
+            type = 'box') %>%
+      add_trace(y = ~ CS2,
+                name = 'CS2',
+                mode = 'lines') %>%
+      add_trace(y = ~ CS3,
+                name = 'CS3',
+                mode = 'lines') %>%
+      add_trace(y = ~ CS4,
+                name = 'CS4',
+                mode = 'lines') %>%
+      add_trace(y = ~ CS5,
+                name = 'CS5',
+                mode = 'lines') %>%
+      add_trace(y = ~ CS6,
+                name = 'CS6',
+                mode = 'lines') %>%
+      layout(title = "Boxplot by day of week")
+  })
+  
+}
 function.MyBoxPlot2 <- function(pac, x, y, color) {
+  #browser()
+  
+  lmx = as.formula(paste0(" ~",x))
+  lmy= as.formula(paste0(" ~",y))
+  lmc=as.formula(paste0(" ~",color))
   renderPlotly({
     plot_ly(
       pac,
-      x = ~ get(x),
-      y = ~ get(y),
-      color = ~ get(color),
+      x = lmx,
+      y = lmy,
+      color = lmc,
       type = "box"
     ) %>%
       layout(boxmode = "group")
@@ -188,23 +254,165 @@ function.MyBoxPlot2 <- function(pac, x, y, color) {
   })
   
 }
+
+#==========================================+Bar plot========================================
+
+
+
+function.MyBarPlotspeed <- function(pac) {
+  renderPlotly({
+    #barplot
+    plot_ly(pac,
+            y = ~ SP1,
+            name = '0-50km/h',
+            type = 'bar') %>%
+      add_trace(y = ~ SP2,
+                name = '50-60km/h',
+                mode = 'lines') %>%
+      add_trace(y = ~ SP3,
+                name = '60-70km/h',
+                mode = 'lines') %>%
+      add_trace(y = ~ SP4,
+                name = '70-80km/h',
+                mode = 'lines') %>%
+      add_trace(y = ~ SP5,
+                name = '80-90km/h',
+                mode = 'lines') %>%
+      add_trace(y = ~ SP6,
+                name = '90-100km/h',
+                mode = 'lines') %>%
+      add_trace(y = ~ SP7,
+                name = '100-110km/h',
+                mode = 'lines') %>%
+      add_trace(y = ~ SP8,
+                name = '110-120km/h',
+                mode = 'lines') %>%
+      add_trace(y = ~ SP9,
+                name = '120-130km/h',
+                mode = 'lines') %>%
+      add_trace(y = ~ SP10,
+                name = '130-140km/h',
+                mode = 'lines') %>%
+      add_trace(y = ~ SP11,
+                name = '140-150km/h',
+                mode = 'lines') %>%
+      add_trace(y = ~ SP12,
+                name = '150-160km/h',
+                mode = 'lines') %>%
+      add_trace(y = ~ SP13,
+                name = '160-180km/h',
+                mode = 'lines') %>%
+      add_trace(y = ~ SP14,
+                name = '180-999km/h',
+                mode = 'lines') %>%
+      layout(title = "Barplot by day of week")
+  })
+  
+}
+function.MyBarPlotlength <- function(pac) {
+  renderPlotly({
+    #barplot length bins 0 300 470 550 600 1300 1800 2550 3600 9999
+    plot_ly(pac,
+            y = ~ LN1,
+            name = '0-300',
+            type = 'bar') %>%
+      add_trace(y = ~ LN2,
+                name = '300-470',
+                mode = 'lines') %>%
+      add_trace(y = ~ LN3,
+                name = '470-550',
+                mode = 'lines') %>%
+      add_trace(y = ~ LN4,
+                name = '550-600',
+                mode = 'lines') %>%
+      add_trace(y = ~ LN5,
+                name = '600-1300',
+                mode = 'lines') %>%
+      add_trace(y = ~ LN6,
+                name = '1300-1800',
+                mode = 'lines') %>%
+      add_trace(y = ~ LN7,
+                name = '1800-2550',
+                mode = 'lines') %>%
+      add_trace(y = ~ LN8,
+                name = '2550-3600',
+                mode = 'lines') %>%
+      add_trace(y = ~ LN9,
+                name = '3600-9999',
+                mode = 'lines') %>%
+      layout(title = "Boxplot by day of week")
+  })
+  
+}
+function.MyarPlotweight <- function(pac) {
+  renderPlotly({
+    #barplot length bins 0 300 470 550 600 1300 1800 2550 3600 9999
+    plot_ly(pac,
+            y = ~ CS1,
+            name = 'CS1',
+            type = 'bar') %>%
+      add_trace(y = ~ CS2,
+                name = 'CS2',
+                mode = 'lines') %>%
+      add_trace(y = ~ CS3,
+                name = 'CS3',
+                mode = 'lines') %>%
+      add_trace(y = ~ CS4,
+                name = 'CS4',
+                mode = 'lines') %>%
+      add_trace(y = ~ CS5,
+                name = 'CS5',
+                mode = 'lines') %>%
+      add_trace(y = ~ CS6,
+                name = 'CS6',
+                mode = 'lines') %>%
+      layout(title = "Boxplot by day of week")
+  })
+  
+}
+function.MyBarPlot2 <- function(pac, x, y, color) {
+  #browser()
+  
+  lmx = as.formula(paste0(" ~",x))
+  lmy= as.formula(paste0(" ~",y))
+  lmc=as.formula(paste0(" ~",color))
+  renderPlotly({
+    plot_ly(
+      pac,
+      x = lmx,
+      y = lmy,
+      color = lmc,
+      type = "bar"
+    ) %>%
+      layout(boxmode = "group")
+    # plot_ly(pac,x = ~SUM,y = ~SP11, color = pac['wday.lbl'],type = "box")%>%
+    #      layout(boxmode = "group")
+  })
+  
+}
+
+
+
 #==================================Anomaly detection=======================================
 
 function.MyAnomalyDetection <-
-  function(pac, myX, myY, Myperiod, MylastOnly) {
-    #View(c(myX,myY,Myperiod,MylastOnly,0))
+  function(pac, myX, myY, Myperiod, MylastOnly,output) {
     #SUM_DATA <- pac[,c(1,12)]
-    
+    #browser()
     # myX<-paste0(myX)
     # myY<-paste0(myY)
     # Myperiod<-2
     # MylastOnly<-FALSE
+    output$errormsg30 <-
+      renderUI(tagList(
+        tags$b("")
+      ))
     SUM_DATA <-
       pac[, c(grep(paste0(myX), colnames(pac)), grep(paste0(myY), colnames(pac)))]
     #View(SUM_DATA)
     #View(c(myX,myY,Myperiod,MylastOnly,1))
     abc <- as.numeric(rownames(SUM_DATA))
-    ggplot(pac, aes(x = myX, y = myY)) + geom_line()
+    ggplot(pac, aes_string(x = paste0(myX), y = paste0(myY))) + geom_line()
     
     #ggplot(pac, aes(x=Index, y=SP11)) + geom_line()
     #res = AnomalyDetectionTs(SUM_DATA, max_anoms=0.01, direction="pos", plot=TRUE, e_value = T)
@@ -230,8 +438,14 @@ function.MyAnomalyDetection <-
     #View(anomaly_table)
     #View(SUM_DATA)
     #View(c(dim(anomaly_table)))
-    if (is.null(anomaly_table)) {
+    if (exists("anomaly_table")==FALSE || is.null(anomaly_table) || nrow(anomaly_table) == 0 & length(names(anomaly_table)) == 0) {
       anomaly_table <- anomaly_table
+      message("Empty  anomaly_table")
+      output$errormsg30<-renderUI(tagList(
+        tags$b("Empty  anomaly_table", style = "color:red")
+      ))
+      return(NULL)
+      
     } else{
       tryCatch({
         anomaly_table <-
@@ -241,18 +455,17 @@ function.MyAnomalyDetection <-
                 by.y = "index")
         
       }, error = function(cond) {
-        message("Error in anomaly_table")
+        message("Error in anomaly_table",paste(cond))
+        output$errormsg30<-renderUI(tagList(
+          tags$b("Exception in Anomaly Table", paste0(cond), style = "color:red")
+        ))
+        return(NULL)
         anomaly_table
         
-      }, warning = function(cond) {
-        message("Warning in anomaly_table")
-        anomaly_table
-      }, finally = {
-        message("Warning of anomaly_table")
       })
     }
     
-    renderPlotly({
+    output$plot31<-renderPlotly({
       plot_ly(SUM_DATA, x = ~ get(myX), y = ~ get(myY)) %>%
         add_trace(colors = "orange",
                   name = "Po?etnos? ?ut v ?ase",
@@ -282,13 +495,17 @@ function.MyMotifDiscovery <- function(pac, myX, myY,window_size,output) {
   #mx <- as.numeric(unlist(pac[paste0(myX)]))
   #my <- as.numeric(unlist(pac[paste0(myY)]))
 #browser()
+  output$errormsg40 <-
+    renderUI(tagList(
+      tags$b("")
+    ))
   if(exists("myX")==FALSE ||is.null(myX) || myX==""){
     myX="SP11"
   }
   if(exists("myY")==FALSE || is.null(myY) || myY==""){
     myY="SP12"
   }
-  if(exists(window_size)==FALSE || is.null(window_size) || window_size==0){
+  if(exists("window_size")==FALSE || is.null(window_size) || window_size==0){
     window_size=2
   }
     #browser()  
@@ -463,11 +680,20 @@ function.MyMotifDiscovery <- function(pac, myX, myY,window_size,output) {
 
 #=========================MACHINE LEARNING========================
 
-function.MyMachineLearning <- function(pac, my_track, output) {
-  #browser()
+function.MyMachineLearning <- function(pac, my_track,max_runtime, output) {
+  output$errormsg50 <-
+    renderUI(tagList(
+      tags$b("")
+    ))
+  
+   #browser()
   if (exists("my_track")==FALSE || my_track == "") {
     my_track = "SUM"
   }
+  if (exists("max_runtime")==FALSE || max_runtime == 0) {
+    max_runtime = 60
+  }
+  
   SUM_DATA <- pac[, c(1, grep(paste0(my_track), colnames(pac)))]
   
   #SUM_DATA <- pac[,c(1,31)]
@@ -526,7 +752,7 @@ function.MyMachineLearning <- function(pac, my_track, output) {
       training_frame = train_h2o,
       validation_frame = valid_h2o,
       leaderboard_frame = test_h2o,
-      max_runtime_secs = 60,
+      max_runtime_secs = max_runtime,
       stopping_metric = "deviance"
     )
     
@@ -545,12 +771,14 @@ function.MyMachineLearning <- function(pac, my_track, output) {
       rename_(actual = paste0(my_track)) %>%
       mutate(error     = actual - pred,
              error_pct = error / actual)
-    output$table53 <- DT::renderDataTable({
+    
+    output$table52 <- DT::renderDataTable({
       error_tbl
     })
     
     
-    error_tbl %>%
+    
+    error_tbl_summary<-error_tbl %>%
       summarise(
         me   = mean(error),
         rmse = mean(error ^ 2) ^ 0.5,
@@ -560,7 +788,9 @@ function.MyMachineLearning <- function(pac, my_track, output) {
       ) %>%
       glimpse()
     
-    
+    output$summary52 <- DT::renderDataTable({
+      error_tbl_summary
+    })
     
     
     
@@ -598,36 +828,30 @@ function.MyMachineLearning <- function(pac, my_track, output) {
            subtitle = "Algotimus H2O mal najvyššiu prestnosť MAPE:9,6%")
     output$plot51 <- renderPlotly(ggplotly(p))
     
-    output$plot52 <- renderPlotly(
-      plot_ly(SUM_DATA, x = ~ Index, y = ~ get(my_track)) %>%
-        add_trace(
-          colors = "orange",
-          name = "Početnosť áut v čase",
-          mode = "lines"
-        ) %>%
-        add_trace(
-          y = ~ pred,
-          colors = "gray",
-          name = "Predikované hodnoty",
-          mode = "lines+markers",
-          alpha = 1,
-          data = error_tbl
-        ) %>%
-        layout(
-          title = "Graf",
-          xaxis = list(title = "Čas",
-                       rangeslider = list(type = "date")),
-          yaxis = list(title = "Početnosť áut")
-        )
-    )
+    # output$plot52 <- renderPlotly(
+    #   plot_ly(SUM_DATA, x = ~ Index, y = ~ get(my_track)) %>%
+    #     add_trace(
+    #       colors = "orange",
+    #       name = "Početnosť áut v čase",
+    #       mode = "lines"
+    #     ) %>%
+    #     add_trace(
+    #       y = ~ pred,
+    #       colors = "gray",
+    #       name = "Predikované hodnoty",
+    #       mode = "lines+markers",
+    #       alpha = 1,
+    #       data = error_tbl
+    #     ) %>%
+    #     layout(
+    #       title = "Graf",
+    #       xaxis = list(title = "Čas",
+    #                    rangeslider = list(type = "date")),
+    #       yaxis = list(title = "Početnosť áut")
+    #     )
+    # )
     
   }, error = function(cond) {
-    output$errormsg50 <-
-      renderUI(tagList(
-        tags$b("Exception in model building", paste0(cond), style = "color:red")
-      ))
-    
-  }, warning = function(cond) {
     output$errormsg50 <-
       renderUI(tagList(
         tags$b("Exception in model building", paste0(cond), style = "color:red")
@@ -772,7 +996,10 @@ function.MyLinearRegression <- function(pac, my_track, output) {
     mape <- mean(abs(test_error_pct), na.rm = TRUE)
     mpe  <- mean(test_error_pct, na.rm = TRUE)
     
-    tibble(me, rmse, mae, mape, mpe) %>% glimpse()
+    summary_tbl<-tibble(me, rmse, mae, mape, mpe) %>% glimpse()
+    output$summary62 <- DT::renderDataTable({
+      summary_tbl
+    })
     
     #Warning message:
     #In tk_xts_.data.frame(ret, select = select, silent = silent) :
@@ -845,7 +1072,7 @@ function.MyArima <- function(pac, my_track, output) {
       message("Error: Arima:",paste(cond))
     })
     exists("p1")
-    output$plot71 <- renderPlotly(ggplotly(p1))
+    #output$plot71 <- renderPlotly(ggplotly(p1))
     tryCatch({
       beer_sales_ts <- tk_ts(SUM_DATA)
       
@@ -878,7 +1105,7 @@ function.MyArima <- function(pac, my_track, output) {
         
       })
     exists("p2")
-    output$plot72 <- renderPlotly(ggplotly(p2))
+    #output$plot72 <- renderPlotly(ggplotly(p2))
     
     #browser()
     # Forecast next 12 months
@@ -945,7 +1172,7 @@ function.MyArima <- function(pac, my_track, output) {
     })
     exists("p3")
     #ggplotly(p3)
-    output$plot73 <- renderPlotly(ggplotly(p3))
+    output$plot71 <- renderPlotly(ggplotly(p3))
     
     
     
@@ -970,7 +1197,7 @@ function.MyArima <- function(pac, my_track, output) {
     })
     error_tbl
     
-    output$table74 <- DT::renderDataTable(error_tbl)
+    output$table72 <- DT::renderDataTable(error_tbl)
     
     
     na.omit(error_tbl)
@@ -986,7 +1213,11 @@ function.MyArima <- function(pac, my_track, output) {
     mape <- mean(abs(test_error_pct), na.rm = TRUE)
     mpe  <- mean(test_error_pct, na.rm = TRUE)
     
-    tibble(me, rmse, mae, mape, mpe) %>% glimpse()
+    summary_tbl<-tibble(me, rmse, mae, mape, mpe) %>% glimpse()
+    output$summary72 <- DT::renderDataTable({
+      summary_tbl
+    })
+    
   }, error = function(cond) {
     message(paste(cond))
     output$errormsg70 <-

@@ -21,123 +21,75 @@ server <- function(input, output,session) {
   
   graphics.off()
   pdf(NULL)
+  sp <- c("SP1","SP2","SP3","SP4","SP5","SP6","SP7","SP8","SP9","SP10","SP11","SP12","SP13","SP14")
+  ln <- c("LN1","LN2","LN3","LN4","LN5","LN6","LN7","LN8","LN9")
+  cs <- c("CS1","CS2","CS3","CS4","CS5","CS6","SUM")
+  dt<-c("Index", "Date_Time")
+  lst<-c(sp,ln,cs)
+  
   ##=================== Dashboard======================== ##
+  
   observeEvent(
-    input$selectfile,{
+    input$dashboardaction,{
       dipu.dashboard(input,output,session)
     },ignoreInit = FALSE)
   
-  observeEvent(
-    input$selectchannel,{
-      dipu.dashboard(input,output,session)
-    },ignoreInit = TRUE)
-  observeEvent(
-    input$selectdataset,{
-      dipu.dashboard(input,output,session)
-    },ignoreInit = TRUE)
-  observeEvent(
-    input$selectdataaggregation,{
-      dipu.dashboard(input,output,session)
-    },ignoreInit = TRUE)
+  
+  ##=======================Box PLot ========================= ##
+  choices=setNames(lst,lst)
   
   observeEvent(
-    input$daterange,{
-      dipu.dashboard(input,output,session)
-    },ignoreInit = TRUE)
-  
-  
-  choices = setNames(colnames(dipu.pre_data),colnames(dipu.pre_data))
-  updateSelectInput(session,"selectboxploty","Select Y:",choices=choices)
-  updateSelectInput(session,"selectboxplotx","Select X:",choices=choices)
-  
-  
-  
-  observeEvent(
-    input$selectcolor,{
+    input$boxplotaction,{
       dipu.boxplot(input,output,session)
     },ignoreInit = TRUE)
+  
+  ##=======================Bar PLot ========================= ##
+  
   observeEvent(
-    input$selectboxploty,{
-      dipu.boxplot(input,output,session)
-    },ignoreInit = TRUE)
-  observeEvent(
-    input$selectboxplotx,{
-      dipu.boxplot(input,output,session)
+    input$barplotaction,{
+      dipu.barplot(input,output,session)
     },ignoreInit = TRUE)
   
   ##=============================== Anomaly Detection========================= ##
-  choices = setNames(colnames(dipu.pre_data),colnames(dipu.pre_data))
-  updateSelectInput(session,"selectanomalyx","Select X:",choices=choices,selected="SP11")
-  updateSelectInput(session,"selectanomalyy","Select Y:",choices=choices,selected="SP12")
-  
+  # choicex = setNames(dt,dt)
+  # choicey=setNames(lst,lst)
+  # updateSelectInput(session,"anomalyselectx","Select X:",choices=choicex,selected="Index")
+  # updateSelectInput(session,"anomalyselecty","Select Y:",choices=choicey,selected="SP12")
+  # 
   observeEvent(
-    input$selectlastonly,{
-      dipu.anomalydetection(input,output,session)
-    },ignoreInit = TRUE)
-  
-  observeEvent(
-    input$selectanomalyx,{
-      dipu.anomalydetection(input,output,session)
-    },ignoreInit = TRUE)
-  
-  observeEvent(
-    input$selectanomalyy,{
-      dipu.anomalydetection(input,output,session)
-    },ignoreInit = TRUE)
-  
-  observeEvent(
-    input$selectperiod,{
+    input$anomalyaction,{
       dipu.anomalydetection(input,output,session)
     },ignoreInit = TRUE)
   
   #==================================Motif discovery=======================================
-  choices = setNames(colnames(dipu.pre_data),colnames(dipu.pre_data))
-  updateSelectInput(session,"selectmotifx","Select X:",choices=choices,selected="SP11")
-  updateSelectInput(session,"selectmotify","Select Y:",choices=choices,selected="SP12")
-  # 
+   
   observeEvent(
-    input$selectmotifx,{
+    input$motifaction,{
       dipu.motifdiscovery(input,output,session)
     },ignoreInit = TRUE)
 
-  observeEvent(
-    input$selectmotify,{
-      dipu.motifdiscovery(input,output,session)
-    },ignoreInit = TRUE)
-  
-  observeEvent(
-    input$selectmotifwindow,{
-      dipu.motifdiscovery(input,output,session)
-    },ignoreInit = TRUE)
-  # 
   #=========================MACHINE LEARNING========================
-  choices = setNames(colnames(dipu.pre_data),colnames(dipu.pre_data))
-  updateSelectInput(session,"machinelearningselectchannel","Select Track:",choices=choices,selected="SUM")
   
   observeEvent(
-    input$machinelearningselectchannel,{
+    input$machinelearningaction,{
       dipu.machinelearning(input,output,session)
     },ignoreInit = TRUE)
 
 
   
   #====================================timetk + linear regression: MAPE = 4.3% (timetk demo)==================================
-  choices = setNames(colnames(dipu.pre_data),colnames(dipu.pre_data))
-  
-  updateSelectInput(session,"linearregressionselectchannel","Select Track:",choices=choices,selected="SUM")
   
   observeEvent(
-    input$linearregressionselectchannel,{
+    input$linearregressionaction,{
       dipu.linearregression(input,output,session)
     },ignoreInit = FALSE)
   
   
   
-  updateSelectInput(session,"arimaselectchannel","Select Track:",choices=choices,selected="SUM")
   
 
   observeEvent(
-    input$arimaselectchannel,{
+    input$arimaaction,{
       dipu.arima(input,output,session)
     },ignoreInit = FALSE)
 
