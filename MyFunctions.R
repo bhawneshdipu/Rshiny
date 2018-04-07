@@ -48,7 +48,7 @@ dipu.motifdiscovery<-function(input,output,session){
   #data1<-function.MyPreprocessAndFilter(data1,input$selectfile,input$selectdaterange,input$selectchannel)
   
   #dipu.pac_data<<-function.MyAggregation(dipu.fil_data,input$selectdataaggregation)
-  output$plot41<-function.MyMotifDiscovery(dipu.pac_data,input$selectmotifx,input$selectmotify,output)
+  output$plot41<-function.MyMotifDiscovery(dipu.pac_data,input$selectmotifx,input$selectmotify,input$selectmotifwindow,output)
 }
 dipu.machinelearning<-function(input,output,session){
   #browser()
@@ -57,7 +57,7 @@ dipu.machinelearning<-function(input,output,session){
   #pac<-function.MyAggregation(dipu.fil_data,input$selectdataaggregation)
   
 
-  dataplot<-function.MyMachineLearning(dipu.pac_data,input$machinelearningselectchannel,output)
+  dataplot<-function.MyMachineLearning(dipu.pre_data,input$machinelearningselectchannel,output)
   #output$plot51<-renderPlotly(dataplot[0])
   #output$plot52<-renderPlotly(dataplot[1])
   #output$table53<-DT::renderDataTable({dataplot[2]})

@@ -73,8 +73,11 @@ sidebar <- dashboardSidebar(width = 325,
               menuItem("Motif Discovery", icon = icon("th"), tabName = "motifdiscovery"),
               conditionalPanel("input.sidebarmenu === 'motifdiscovery'",
                                selectInput("selectmotifx","X-axis:",choices=list("Index"="Index","SP11"="SP11","SP12"="SP12"),selected="SP12"),
-                               selectInput("selectmotify","Y-axis:",choices=list("Index"="Index","SP11"="SP11"),selected = "SP11")
-              ),
+                               selectInput("selectmotify","Y-axis:",choices=list("Index"="Index","SP11"="SP11"),selected = "SP11"),
+                               sliderInput("selectmotifwindow", "Window Size:",
+                                           min = 1, max = 25, value = 2
+                               )
+                               ),
               menuItem("Machine Learning", icon = icon("th"), tabName = "machinelearning"),
               conditionalPanel("input.sidebarmenu === 'machinelearning'",
                                selectInput("machinelearningselectchannel", "Select Channel:",choices = list("All"="all","Direction(1,2)"="12","Direction(3,4)"="34","Channel 1" = 1, "Channel 2" = 2,"Channel 3" = 3,"Channel 4" = 4), selected = 1)
@@ -148,7 +151,7 @@ body <- dashboardBody(
               )
             ),fluidRow(
               column(12,
-                     plotOutput("plot41", height = 300)
+                     plotlyOutput("plot41", height = 300)
               )
             )
     ),

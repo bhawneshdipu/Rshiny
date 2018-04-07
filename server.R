@@ -104,6 +104,11 @@ server <- function(input, output,session) {
     input$selectmotify,{
       dipu.motifdiscovery(input,output,session)
     },ignoreInit = TRUE)
+  
+  observeEvent(
+    input$selectmotifwindow,{
+      dipu.motifdiscovery(input,output,session)
+    },ignoreInit = TRUE)
   # 
   #=========================MACHINE LEARNING========================
   choices = setNames(colnames(dipu.pre_data),colnames(dipu.pre_data))

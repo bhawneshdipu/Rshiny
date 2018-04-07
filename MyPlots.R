@@ -278,15 +278,18 @@ function.MyAnomalyDetection <-
 
 #==================================Motif discovery=======================================
 
-function.MyMotifDiscovery <- function(pac, myX, myY,output) {
+function.MyMotifDiscovery <- function(pac, myX, myY,window_size,output) {
   #mx <- as.numeric(unlist(pac[paste0(myX)]))
   #my <- as.numeric(unlist(pac[paste0(myY)]))
-
-  if(is.null(myX) || myX==""){
+#browser()
+  if(exists("myX")==FALSE ||is.null(myX) || myX==""){
     myX="SP11"
   }
-  if(is.null(myY) || myY==""){
+  if(exists("myY")==FALSE || is.null(myY) || myY==""){
     myY="SP12"
+  }
+  if(exists(window_size)==FALSE || is.null(window_size) || window_size==0){
+    window_size=2
   }
     #browser()  
   tsvalx <-
@@ -295,13 +298,13 @@ function.MyMotifDiscovery <- function(pac, myX, myY,output) {
     pac %>% select(paste0(myX)) %>% unlist(use.names = FALSE)
   
   typeof(tsvalx)
-  
+  window_size<-as.numeric(window_size)
   tryCatch({
     res.wcc <- Func.motif(
       ts = pac[[paste0(myX)]],
       global.norm = T,
       local.norm = F,
-      window.size = 24,
+      window.size = window_size,
       overlap = 0,
       w = 6,
       a = 5,
@@ -333,7 +336,7 @@ function.MyMotifDiscovery <- function(pac, myX, myY,output) {
         ts =  pac[[paste0(myX)]],
         global.norm = T,
         local.norm = F,
-        window.size = 24,
+        window.size = window_size,
         overlap = 0,
         w = 6,
         a = 5,
@@ -364,7 +367,7 @@ function.MyMotifDiscovery <- function(pac, myX, myY,output) {
     data.wcc <-
       Func.visual.SingleMotif(
         single.ts =  pac[[paste0(myX)]],
-        window.size = 24,
+        window.size = window_size,
         motif.indices = res.wcc$Indices
       )  
     
@@ -388,7 +391,7 @@ function.MyMotifDiscovery <- function(pac, myX, myY,output) {
   data.ahu <-
     Func.visual.SingleMotif(
       single.ts =  pac[[paste0(myY)]],
-      window.size = 24,
+      window.size = window_size,
       motif.indices = res.ahu$Indices
     )
   
@@ -462,7 +465,7 @@ function.MyMotifDiscovery <- function(pac, myX, myY,output) {
 
 function.MyMachineLearning <- function(pac, my_track, output) {
   #browser()
-  if (my_track == "") {
+  if (exists("my_track")==FALSE || my_track == "") {
     my_track = "SUM"
   }
   SUM_DATA <- pac[, c(1, grep(paste0(my_track), colnames(pac)))]

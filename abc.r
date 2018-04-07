@@ -23,7 +23,7 @@ library(randomForest)
 library(AnomalyDetection)
 packageVersion('plotly')
 
-
+browser()
 # path to folder that holds multiple .csv files
 #folder <- "C:/Users/USER/Documents/DP/Dataframe_Script/same_date/"      
 folder <- "./"
@@ -283,7 +283,7 @@ View(pac)
  #==================================Motif discovery=======================================
  
 
- res.wcc <- Func.motif(ts = pac$SP11,global.norm = T,local.norm = F,window.size = 24,overlap = 0,w = 6,a = 5,mask.size = 5,max.dist.ratio = 1.2,count.ratio.1 = 1.1,count.ratio.2 = 1.1)
+ res.wcc <- Func.motif(ts = pac$SP11,global.norm = F,local.norm = T,window.size = 10,overlap = 0,w = 6,a = 5,mask.size = 5,max.dist.ratio = 1.2,count.ratio.1 = 1.1,count.ratio.2 = 1.1)
  
  res.ahu <- Func.motif(ts = pac$SP12, global.norm = T, local.norm = F, window.size = 24, overlap = 0, w = 6, a = 5, mask.size = 5, max.dist.ratio = 1.2, count.ratio.1 = 1.1, count.ratio.2 = 1.1)
  

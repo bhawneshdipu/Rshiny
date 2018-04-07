@@ -24,13 +24,23 @@ library(randomForest)
 library(AnomalyDetection)
 packageVersion('plotly')
 
+
+pac<-dipu.pac_data
+pac<-period.apply(df_XCV_xts[,(names(df_XCV_xts)) ], INDEX = ep, FUN = mean)
+#Time series to DF
+pac <-fortify(pac)
+pac <-  select(pac, -c(PEAKINT, INTERVAL))
+pac<-tk_augment_timeseries_signature(pac)
+
+
 #==================================Motif discovery=======================================
 
  data(BuildOperation)
- res.wcc <- Func.motif(ts = BuildOperation$WCC, global.norm = T, local.norm = F, window.size = 24, overlap = 0, w = 6, a = 5, mask.size = 5, max.dist.ratio = 1.2, count.ratio.1 = 1.1, count.ratio.2 = 1.1)
 
- 
-res.wcc <- Func.motif(ts = dipu.pac_data$SUM,global.norm = T,local.norm = F,window.size = 24,overlap = 0,w = 6,a = 5,mask.size = 5,max.dist.ratio = 1.2,count.ratio.1 = 1.1,count.ratio.2 = 1.1)
+xxx<-BuildOperation$WCC 
+res.wcc <- Func.motif(ts =xxx , global.norm = T, local.norm = F, window.size = 24, overlap = 0, w = 6, a = 5, mask.size = 5, max.dist.ratio = 1.2, count.ratio.1 = 1.1, count.ratio.2 = 1.1)
+xx<-pac$SP11
+res.wcc <- Func.motif(ts = xx,global.norm = T,local.norm = F,window.size = 24,overlap = 0,w = 6,a = 5,mask.size = 5,max.dist.ratio = 1.2,count.ratio.1 = 1.1,count.ratio.2 = 1.1)
 
 res.ahu <- Func.motif(ts = pac$SP12, global.norm = T, local.norm = F, window.size = 24, overlap = 0, w = 6, a = 5, mask.size = 5, max.dist.ratio = 1.2, count.ratio.1 = 1.1, count.ratio.2 = 1.1)
 
