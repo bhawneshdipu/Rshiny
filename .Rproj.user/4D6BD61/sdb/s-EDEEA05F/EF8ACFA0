@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "## ARIMA ##\n\n\n\n#====================================ARIMA + sweep: MAPE = 4.3% (sweep demo)==================================\n\n\n\nSUM_DATA <- pac[,c(1,31)]\np<-SUM_DATA %>%\n  ggplot(aes(Index, SUM)) +\n  geom_line(col = palette_light()[1]) +\n  geom_point(col = palette_light()[1]) +\n  geom_ma(ma_fun = SMA, n = 12, size = 1) +\n  theme_tq() %>%\n  labs(title = \"Beer Sales: 2007 through 2016\")\nggplotly(p)\n\nbeer_sales_ts <- tk_ts(SUM_DATA)\nbeer_sales_ts\nhas_timetk_idx(beer_sales_ts)\nfit_arima <- auto.arima(beer_sales_ts)\n\nfit_arima\n# sw_tidy - Get model coefficients\nsw_tidy(fit_arima)\n# sw_glance - Get model description and training set accuracy measures\nsw_glance(fit_arima) %>%\n  glimpse()\n\n# sw_augment - get model residuals\nsw_augment(fit_arima, timetk_idx = TRUE)\n\np<-sw_augment(fit_arima, timetk_idx = TRUE) %>%\n  ggplot(aes(x = index, y = .resid)) +\n  geom_point() + \n  geom_hline(yintercept = 0, color = \"red\") + \n  labs(title = \"Residual diagnostic\") +\n  theme_tq()\nggplotly(p)\n# Forecast next 12 months\nfcast_arima <- forecast(fit_arima, h = 100)\nclass(fcast_arima)\n\n# Check if object has timetk index \nhas_timetk_idx(fcast_arima)\n\n# sw_sweep - tidies forecast output\nfcast_tbl <- sw_sweep(fcast_arima, timetk_idx = TRUE)\n\nfcast_tbl\n\n\n\n\n# Visualize the forecast with ggplot\np<-fcast_tbl %>%\n  ggplot(aes(x = index, y = SUM, color = key)) +\n  # 95% CI\n  geom_ribbon(aes(ymin = lo.95, ymax = hi.95), \n              fill = \"#D5DBFF\", color = NA, size = 0) +\n  # 80% CI\n  geom_ribbon(aes(ymin = lo.80, ymax = hi.80, fill = key), \n              fill = \"#596DD5\", color = NA, size = 0, alpha = 0.8)+\n  # Prediction\n  geom_line() +\n  geom_point() +\n  # Actuals\n  geom_line(aes(x = Index, y = SUM), color = palette_light()[[1]], data = actuals_tbl) +\n  geom_point(aes(x = Index, y = SUM), color = palette_light()[[1]], data = actuals_tbl)+ \n  # Aesthetics\n  labs(title = \"Beer Sales Forecast: ARIMA\", x = \"\", y = \"Thousands of Tons\",\n       subtitle = \"sw_sweep tidies the auto.arima() forecast output\") +\n  scale_color_tq() +\n  scale_fill_tq() +\n  theme_tq()\n\n\n\nggplotly(p)\n\nerror_tbl <- left_join(actuals_tbl, fcast_tbl, by = c(\"Index\" = \"index\"))%>% \n  rename(actual = SUM.x, pred = SUM.y) %>%\n  select(Index, actual, pred) %>%\n  mutate(\n    error     = actual - pred,\n    error_pct = error / actual\n  ) \nerror_tbl\nna.omit(error_tbl)\n# Calculate test error metrics\ntest_residuals <- error_tbl$error\ntest_error_pct <- error_tbl$error_pct * 100 # Percentage error\n\nme   <- mean(test_residuals, na.rm=TRUE)\nrmse <- mean(test_residuals^2, na.rm=TRUE)^0.5\nmae  <- mean(abs(test_residuals), na.rm=TRUE)\nmape <- mean(abs(test_error_pct), na.rm=TRUE)\nmpe  <- mean(test_error_pct, na.rm=TRUE)\n\ntibble(me, rmse, mae, mape, mpe) %>% glimpse()\n\n",
+    "created" : 1523084475810.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3769386924",
+    "id" : "EF8ACFA0",
+    "lastKnownWriteTime" : 1523047706,
+    "last_content_update" : 1523047706,
+    "path" : "~/fiverr/Rshiny/ARIMA.R",
+    "project_path" : "ARIMA.R",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 12,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

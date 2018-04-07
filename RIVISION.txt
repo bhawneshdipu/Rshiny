@@ -1,0 +1,55 @@
+ON ALL TABS:
+Can you add filters on every tab of app.
+Can you add Submit button to confimr my choices 
+
+1.Dashboard- can you add checkboxGroupInput for all bins which to vizualize?, 
+in plot you dont have all legend only 12 bins,can you add SUbmit button to confimr my choices ?
+
+2.Box Plot -1.boxplot-can I choose between datasets. Can you add filters on every tab of app.
+	can you add checkboxGroupInput for all bins which to vizualize?,
+	this is code of first boxplot:
+	plot_ly(pac,y = ~SP1, name = '0-50km/h',type = 'box')%>%
+   	add_trace(y = ~SP2, name = '50-60km/h', mode = 'lines') %>%
+   	add_trace(y = ~SP3, name = '60-70km/h', mode = 'lines') %>%
+   	add_trace(y = ~SP4, name = '70-80km/h', mode = 'lines') %>%
+   	add_trace(y = ~SP5, name = '80-90km/h', mode = 'lines') %>%
+   	add_trace(y = ~SP6, name = '90-100km/h', mode = 'lines') %>%
+   	add_trace(y = ~SP7, name = '100-110km/h', mode = 'lines') %>%
+   	add_trace(y = ~SP8, name = '110-120km/h', mode = 'lines') %>%
+   	add_trace(y = ~SP9, name = '120-130km/h', mode = 'lines') %>%
+   	add_trace(y = ~SP10, name = '130-140km/h', mode = 'lines') %>%
+   	add_trace(y = ~SP11, name = '140-150km/h', mode = 'lines') %>%
+   	add_trace(y = ~SP12, name = '150-160km/h', mode = 'lines') %>%
+   	add_trace(y = ~SP13, name = '160-180km/h', mode = 'lines')%>%
+   	add_trace(y = ~SP14, name = '180-999km/h', mode = 'lines')%>%
+   	layout(title = "Boxplot by day of week")
+
+
+	  2.boxplot- please delete the X axis and Y axis will be SP1-SP14,LN1-LN9,CS1-CS6,SUM not any other pls. 
+	   	Color is good but be careful that all colors are factors objects. 
+		plot_ly(pac,y = ~SUM, color = ~month.lbl,year, am.pm estc..,type = "box")%>%
+   		layout(boxmode = "group")
+Anomaly detection - X axis allways will be "Date" (Index or Date_Time column)object no any other 
+		    and Y axis will be SP1-SP14,LN1-LN9,CS1-CS6,SUM not any other pls.
+Bar plot - can you add one moore tab "BarPlot" same condition as at boxplot pls :)
+MotifDiscovery - I want to choose only between  SP1-SP14,LN1-LN9,CS1-CS6,SUM no any others columns.
+		This tab doesnt work for me
+		 Exception in motif's discovery Error in ggplot(data = data.wcc$data.1): object 'data.wcc' not found
+		no applicable method for 'ggplotly' applied to an object of class "function"
+Machine Learning H20 -  I want to choose only between  SP1-SP14,LN1-LN9,CS1-CS6,SUM no any others columns.
+		firs plot is useless can you delete it? Can you add slidebar max_runtime_secs- max 10 min, selected 60sec
+		   can you add summarize of error table ? under plot and up to error table	
+ 	error_tbl %>%
+ 	 summarise(
+  	  me   = mean(error),
+  	  rmse = mean(error^2)^0.5,
+  	  mae  = mean(abs(error)),
+   	 mape = mean(abs(error_pct)),
+   	 mpe  = mean(error_pct)
+		 ) %>%
+ 	 glimpse()
+Linear Regresion -  I want to choose only between  SP1-SP14,LN1-LN9,CS1-CS6,SUM no any others columns.	
+		also can you add summarize of error table ? under plot and up to error table
+ARIMA - I want to choose only between  SP1-SP14,LN1-LN9,CS1-CS6,SUM no any others columns.	
+		also can you add summarize of error table ? under plot and up to error table
+	Can you delete first two plots
