@@ -1,14 +1,14 @@
 {
     "collab_server" : "",
-    "contents" : "library(shinydashboard)\nlibrary(shiny)  \nsource(\"global.R\")\nh2o.init()\nh2o.no_progress()\n\n\nshinyApp(ui, server)\nrunApp(port = 8888)\n",
+    "contents" : "library(shinydashboard)\nlibrary(shiny)  \nsource(\"global.R\")\nh2o.init()\nh2o.no_progress()\n\n\nshinyApp(ui, server)\n\n",
     "created" : 1522985782105.000,
     "dirty" : false,
     "encoding" : "UTF-8",
     "folds" : "",
-    "hash" : "3688718433",
+    "hash" : "1397937012",
     "id" : "13CBE7D2",
-    "lastKnownWriteTime" : 1522987710,
-    "last_content_update" : 1522987710052,
+    "lastKnownWriteTime" : 1523081072,
+    "last_content_update" : 1523081072820,
     "path" : "~/fiverr/Rshiny/app.R",
     "project_path" : "app.R",
     "properties" : {

@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "## GetRawData.R ##\n\nfunction.getRawData <- function(name = \"all\",daterange=\"none\",channel=\"all\") {\n  if (file.exists(paste0(\"dipu.raw_data\", \".Rda\"))) {\n    load(paste0(\"dipu.raw_data\", \".Rda\"))\n    return(dipu.raw_data)\n    \n  } else{\n    file_list <-\n      list.files(pattern = \"(SC)(.)*(.csv)$\",\n                 recursive = TRUE,\n                 full.names = TRUE)\n    raw_data <-\n      do.call(\"rbind\", lapply(file_list, function(x) {\n        message(x)\n        read_csv(x)\n      }))\n    dipu.raw_data <- raw_data\n    save(dipu.raw_data, file = paste0(\"dipu.raw_data\", \".Rda\"))\n    return(dipu.raw_data)\n    \n  }\n}\n",
+    "created" : 1523081860685.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "940957668",
+    "id" : "4C50BC2A",
+    "lastKnownWriteTime" : 1522879558,
+    "last_content_update" : 1522879558,
+    "path" : "~/fiverr/Rshiny/GetMyData.R",
+    "project_path" : "GetMyData.R",
+    "properties" : {
+    },
+    "relative_order" : 11,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

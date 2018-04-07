@@ -638,7 +638,7 @@ function.MyMachineLearning <- function(pac, my_track, output) {
 ## Linear Regression ##
 #====================================timetk + linear regression: MAPE = 4.3% (timetk demo)==================================
 function.MyLinearRegression <- function(pac, my_track, output) {
-  browser()
+  #browser()
   tryCatch({
     #SUM_DATA <- pac[, c(1, 31)]
     
@@ -819,7 +819,7 @@ function.MyLinearRegression <- function(pac, my_track, output) {
 #====================================ARIMA + sweep: MAPE = 4.3% (sweep demo)==================================
 
 function.MyArima <- function(pac, my_track, output) {
-  browser()
+  #browser()
   tryCatch({
     if (exists("my_track")==FALSE || is.null(my_track) || my_track == "") {
       my_track = "SUM"

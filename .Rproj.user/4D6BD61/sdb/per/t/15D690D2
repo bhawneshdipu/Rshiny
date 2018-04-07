@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "\nlibrary(readr)\nlibrary(ggplot2)\nlibrary(plotly)\nlibrary(stringr)\nlibrary(DataLoader)\nlibrary(forecast)\nlibrary(tseries)\nlibrary(zoo)\nlibrary(xts)\nlibrary(fts)\nlibrary(MASS)\nlibrary(caret)\nlibrary(e1071)\nlibrary(dplyr)\n#library(h2o)        # Awesome ML Library\nlibrary(timetk)     # Toolkit for working with time series in R\nlibrary(tidyquant)\nlibrary(anomalyDetection)\nlibrary(TSMining)\nlibrary(randomForest)\n#install.packages(\"devtools\")\n#devtools::install_github(\"twitter/AnomalyDetection\")\nlibrary(AnomalyDetection)\npackageVersion('plotly')\n\n#==================================Motif discovery=======================================\n\n data(BuildOperation)\n res.wcc <- Func.motif(ts = BuildOperation$WCC, global.norm = T, local.norm = F, window.size = 24, overlap = 0, w = 6, a = 5, mask.size = 5, max.dist.ratio = 1.2, count.ratio.1 = 1.1, count.ratio.2 = 1.1)\n\n \nres.wcc <- Func.motif(ts = dipu.pac_data$SUM,global.norm = T,local.norm = F,window.size = 24,overlap = 0,w = 6,a = 5,mask.size = 5,max.dist.ratio = 1.2,count.ratio.1 = 1.1,count.ratio.2 = 1.1)\n\nres.ahu <- Func.motif(ts = pac$SP12, global.norm = T, local.norm = F, window.size = 24, overlap = 0, w = 6, a = 5, mask.size = 5, max.dist.ratio = 1.2, count.ratio.1 = 1.1, count.ratio.2 = 1.1)\n\n\n#Visualization\ndata.wcc <- Func.visual.SingleMotif(single.ts = pac$SP11, window.size = 24, motif.indices = res.wcc$Indices)\ndata.ahu <- Func.visual.SingleMotif(single.ts = pac$SP12, window.size = 24, motif.indices = res.ahu$Indices)\n\n#Determine the total number of motifs discovered in the time series of WCC\nn <- length(unique(data.wcc$data.1$Y))\n#Make the plot\np<-ggplot(data = data.wcc$data.1) +  \n  geom_line(aes(x = 1:dim(data.wcc$data.1)[1], y = X)) +\n  geom_point(aes(x = 1:dim(data.wcc$data.1)[1], y = X, color=Y, shape=Y))+\n  scale_shape_manual(values = seq(from = 1, to = n)) +\n  guides(shape=guide_legend(nrow = 2)) +\n  xlab(\"Time (15-min)\") + ylab(\"Počet áut\") +\n  theme(panel.background=element_rect(fill = \"white\", colour = \"black\"),\n        legend.position=\"top\",\n        legend.title=element_blank())\n\nggplotly(p)\n",
+    "created" : 1523080150366.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "96851353",
+    "id" : "15D690D2",
+    "lastKnownWriteTime" : 1523087668,
+    "last_content_update" : 1523087668354,
+    "path" : "~/fiverr/Rshiny/Motifs.R",
+    "project_path" : "Motifs.R",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 9,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
